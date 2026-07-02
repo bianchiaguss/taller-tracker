@@ -19,6 +19,7 @@ const nav = [
   { to: '/admin/opiniones', label: 'Reseñas', icon: Star },
   { section: 'Sistema' },
   { to: '/admin/estados', label: 'Estados', icon: Settings },
+  { to: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ]
 
 function SidebarContent({ usuario, onLogout, onNavigate }) {
