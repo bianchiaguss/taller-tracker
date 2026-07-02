@@ -78,7 +78,7 @@ CONFIG_POR_DEFECTO = {
     "instagram": "",
     "facebook": "",
     "google_maps_embed": "",
-    "google_maps_review_url": "",
+    "google_maps_review_url": "https://share.google/h0rrTiw1GwVoRzNzi",
     "google_place_id": "",   # Place ID de Google My Business  # URL de Google Maps para dejar reseña
 }
 
