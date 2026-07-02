@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: taller-tracker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./taller.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_URL
+        value: "*"

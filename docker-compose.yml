@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: taller_user
+      POSTGRES_PASSWORD: taller_pass
+      POSTGRES_DB: taller_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - taller_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taller_user -d taller_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://taller_user:taller_pass@db:5432/taller_db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - taller_uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  taller_db_data:
+  taller_uploads:
