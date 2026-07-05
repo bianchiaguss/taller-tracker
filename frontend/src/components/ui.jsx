@@ -78,15 +78,17 @@ export function TextInput({ value, onChange, capitalize, as = 'input', className
 }
 
 // Input de dinero: muestra 1.500.000 y entrega los dígitos crudos ("1500000").
+// Agrupa los miles con puntos manualmente (sin depender del locale del dispositivo).
+const soloDigitos = v => String(v ?? '').replace(/\D/g, '').replace(/^0+(?=\d)/, '')
+const agruparMiles = d => (d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '')
 export function MoneyInput({ value, onChange, className = 'input', ...props }) {
   const ref = useRef(null)
   const caret = useCaret(ref)
-  const fmt = v => (v === '' || v == null ? '' : Number(v).toLocaleString('es-AR'))
   const handle = e => {
     const el = e.target
     const digitsBefore = el.value.slice(0, el.selectionStart).replace(/\D/g, '').length
-    const raw = el.value.replace(/\D/g, '')
-    const formatted = fmt(raw)
+    const raw = soloDigitos(el.value)
+    const formatted = agruparMiles(raw)
     let count = 0, pos = 0
     for (; pos < formatted.length && count < digitsBefore; pos++) {
       if (/\d/.test(formatted[pos])) count++
@@ -94,7 +96,7 @@ export function MoneyInput({ value, onChange, className = 'input', ...props }) {
     caret.current = pos
     onChange(raw)
   }
-  return <input ref={ref} inputMode="numeric" className={className} value={fmt(value)} onChange={handle} {...props} />
+  return <input ref={ref} inputMode="numeric" className={className} value={agruparMiles(soloDigitos(value))} onChange={handle} {...props} />
 }
 
 /* ── PageHeader ──────────────────────────────────── */
