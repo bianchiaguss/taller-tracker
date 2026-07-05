@@ -109,7 +109,7 @@ export default function AdminLayout() {
         {mobileOpen && (
           <motion.div key="backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             exit={{ opacity: 0, pointerEvents: 'none' }}
-            onClick={() => setMobileOpen(false)} className="lg:hidden fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm" />
+            onClick={() => setMobileOpen(false)} className="lg:hidden fixed inset-0 z-40 bg-slate-900/60" />
         )}
         {mobileOpen && (
           <motion.aside key="drawer" initial={{ x: -288 }} animate={{ x: 0 }}

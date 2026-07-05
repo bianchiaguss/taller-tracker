@@ -156,7 +156,7 @@ export function Modal({ open, onClose, children, className = '', size = 'md' }) 
   if (!open) return null
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, pointerEvents: 'none' }}
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50"
       onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
