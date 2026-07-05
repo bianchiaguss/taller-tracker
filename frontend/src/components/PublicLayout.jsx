@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Wrench, Menu, X, MessageCircle, Phone, Mail, MapPin, Instagram, Facebook, ArrowUpRight } from 'lucide-react'
+import { ThemeToggle } from './ui'
 
 const INSTAGRAM_URL = 'https://www.instagram.com/bianchi.detailing/'
 
@@ -53,6 +54,7 @@ function Navbar({ config }) {
         </nav>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle className="w-9 h-9 text-white hover:bg-white/10" />
           <Link to="/presupuesto" className="hidden md:inline-flex btn-primary btn-sm">
             Solicitar presupuesto
           </Link>

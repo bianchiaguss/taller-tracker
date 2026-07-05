@@ -89,3 +89,100 @@
   .icon-box { @apply flex items-center justify-center rounded-xl flex-shrink-0; }
   .glass { @apply bg-white/70 backdrop-blur-xl; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   TEMA / DARK MODE
+   Un único set de variables define ambos temas. El modo oscuro se
+   activa con la clase .dark en <html> (ver index.html + ThemeToggle).
+   El modo claro NO se toca: solo se agregan overrides bajo .dark.
+   ══════════════════════════════════════════════════════════════════ */
+:root {
+  color-scheme: light;
+  --c-bg: #F7F8FA;      /* fondo de la app (surface) */
+  --c-card: #FFFFFF;    /* tarjetas, modales, inputs */
+  --c-muted: #F8FAFC;   /* slate-50 */
+  --c-muted2: #F1F5F9;  /* slate-100 */
+  --c-fg: #0F172A;      /* texto principal */
+  --c-fg2: #334155;     /* texto secundario */
+  --c-fg3: #475569;
+  --c-mut: #64748B;     /* texto atenuado */
+  --c-mut2: #94A3B8;
+  --c-mut3: #CBD5E1;
+  --c-border: #E2E8F0;
+  --c-border2: #F1F5F9;
+}
+.dark {
+  color-scheme: dark;
+  --c-bg: #0F172A;
+  --c-card: #1E293B;
+  --c-muted: #172234;
+  --c-muted2: #24334B;
+  --c-fg: #E8EDF4;
+  --c-fg2: #CBD5E1;
+  --c-fg3: #B8C4D6;
+  --c-mut: #94A3B8;
+  --c-mut2: #7E8CA3;
+  --c-mut3: #64748B;
+  --c-border: #334155;
+  --c-border2: #273449;
+}
+
+/* Transición suave al cambiar de tema */
+*, *::before, *::after {
+  transition: background-color .25s ease, border-color .25s ease, color .2s ease;
+}
+
+/* ── Overrides de modo oscuro ─────────────────────────────────────── */
+.dark body { background-color: var(--c-bg); color: var(--c-fg); }
+.dark * { scrollbar-color: #475569 transparent; }
+.dark *::-webkit-scrollbar-thumb { background-color: #475569; }
+
+/* Clases de componente */
+.dark .card { background-color: var(--c-card); border-color: var(--c-border); }
+.dark .input, .dark .select, .dark .textarea { background-color: var(--c-card); border-color: var(--c-border); color: var(--c-fg); }
+.dark .input::placeholder, .dark .textarea::placeholder { color: var(--c-mut2); }
+.dark .label { color: var(--c-fg3); }
+.dark .hint { color: var(--c-mut2); }
+.dark .btn-secondary { background-color: var(--c-card); color: var(--c-fg2); border-color: var(--c-border); }
+.dark .btn-secondary:hover { background-color: var(--c-muted2); }
+.dark .btn-ghost { color: var(--c-fg3); }
+.dark .btn-ghost:hover { background-color: var(--c-muted2); color: var(--c-fg); }
+.dark .table thead th { background-color: var(--c-muted); color: var(--c-mut); border-color: var(--c-border); }
+.dark .table tbody td { border-color: var(--c-border2); color: var(--c-fg2); }
+.dark .table tbody tr:hover { background-color: var(--c-muted); }
+.dark .badge-neutral { background-color: var(--c-muted2); color: var(--c-fg2); }
+.dark .glass { background-color: rgba(15, 23, 42, 0.72); }
+.dark .chip { background-color: var(--c-muted2); color: var(--c-fg2); }
+.dark .divider { border-color: var(--c-border2); }
+.dark .skeleton { background-color: var(--c-muted2); }
+
+/* Remap de utilidades hardcodeadas (superficie / texto / bordes) */
+.dark .bg-white { background-color: var(--c-card); }
+.dark .bg-surface { background-color: var(--c-bg); }
+.dark .bg-slate-50 { background-color: var(--c-muted); }
+.dark .bg-slate-100 { background-color: var(--c-muted2); }
+.dark .bg-slate-50\/70 { background-color: var(--c-muted); }
+.dark .bg-slate-50\/50 { background-color: var(--c-muted); }
+.dark .hover\:bg-slate-50:hover { background-color: var(--c-muted); }
+.dark .hover\:bg-slate-100:hover { background-color: var(--c-muted2); }
+.dark .hover\:bg-slate-50\/70:hover { background-color: var(--c-muted); }
+
+.dark .text-slate-900 { color: var(--c-fg); }
+.dark .text-slate-800 { color: var(--c-fg); }
+.dark .text-slate-700 { color: var(--c-fg2); }
+.dark .text-slate-600 { color: var(--c-fg3); }
+.dark .text-slate-500 { color: var(--c-mut); }
+.dark .text-slate-400 { color: var(--c-mut2); }
+.dark .text-slate-300 { color: var(--c-mut3); }
+
+.dark .border-slate-200 { border-color: var(--c-border); }
+.dark .border-slate-200\/70 { border-color: var(--c-border); }
+.dark .border-slate-100 { border-color: var(--c-border2); }
+.dark .border-slate-300 { border-color: var(--c-border); }
+
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border2); }
+.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border); }
+.dark .divide-slate-200\/70 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border); }
+
+/* Se mantiene blanco puro donde es intencional (logos, punto del pin) */
+.keep-white { background-color: #FFFFFF !important; }

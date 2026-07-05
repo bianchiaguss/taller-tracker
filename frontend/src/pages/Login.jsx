@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import api from '../api/client'
 import { Wrench, Eye, EyeOff, AlertCircle, ShieldCheck, Camera, Bell, Car, CheckCircle2 } from 'lucide-react'
-import { Spinner } from '../components/ui'
+import { Spinner, ThemeToggle } from '../components/ui'
 
 /* Mockup del producto — refuerza la identidad */
 function TrackingPreview() {
@@ -116,6 +116,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
+      <ThemeToggle className="fixed top-4 right-4 z-50 w-10 h-10 bg-white/80 border border-slate-200 shadow-soft text-slate-600 hover:bg-white" />
       <BrandPanel tallerNombre={tallerNombre} />
 
       {/* Panel derecho */}

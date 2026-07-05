@@ -2,6 +2,7 @@ import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { ThemeToggle } from './ui'
 import {
   LayoutDashboard, Users, FileText, Settings, LogOut, Wrench,
   ClipboardList, Image as ImageIcon, Star, FolderOpen, Menu
@@ -74,6 +75,7 @@ function SidebarContent({ usuario, onLogout, onNavigate }) {
             <p className="text-white text-xs font-semibold truncate">{usuario?.nombre} {usuario?.apellido}</p>
             <p className="text-slate-500 text-[11px] truncate">Administrador</p>
           </div>
+          <ThemeToggle className="text-slate-400 hover:text-white p-1" />
           <button onClick={onLogout} className="text-slate-500 hover:text-red-400 transition-colors p-1" title="Cerrar sesión">
             <LogOut size={16} />
           </button>
@@ -127,7 +129,7 @@ export default function AdminLayout() {
         <header className="lg:hidden flex items-center justify-between px-4 h-14 bg-white border-b border-slate-200 flex-shrink-0">
           <button onClick={() => setMobileOpen(true)} className="p-2 -ml-2 text-slate-600"><Menu size={22} /></button>
           <span className="font-bold text-slate-900 text-sm">TallerTrack</span>
-          <div className="w-8" />
+          <ThemeToggle className="w-9 h-9 text-slate-600 hover:bg-slate-100" />
         </header>
 
         <main className="flex-1 overflow-y-auto">

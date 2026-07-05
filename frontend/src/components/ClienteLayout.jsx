@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate, useLocation, Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { ThemeToggle } from './ui'
 import { LayoutDashboard, Car, FileText, Bell, User, LogOut, Wrench } from 'lucide-react'
 
 const nav = [
@@ -50,6 +51,7 @@ export default function ClienteLayout() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle className="w-9 h-9 text-slate-500 hover:bg-slate-100" />
             <div className="hidden sm:flex items-center gap-2.5 pl-3 border-l border-slate-200">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
                 <span className="text-[11px] font-bold text-white">{usuario?.nombre?.[0]}{usuario?.apellido?.[0]}</span>

@@ -172,7 +172,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <Navbar config={config} />
 
       {/* ─── Hero asimétrico ──────────────────────────────────── */}
@@ -425,7 +425,7 @@ export default function Home() {
                       background: 'conic-gradient(from 130deg at 50% 50%, #4285F4 0deg, #34A853 90deg, #FBBC05 170deg, #EA4335 250deg, #4285F4 360deg)',
                       boxShadow: '0 10px 18px rgba(0,0,0,0.4)',
                     }} />
-                    <div className="absolute rounded-full bg-white" style={{ width: 18, height: 18, left: '50%', top: 24, transform: 'translate(-50%, -50%)' }} />
+                    <div className="absolute rounded-full keep-white" style={{ width: 18, height: 18, left: '50%', top: 24, transform: 'translate(-50%, -50%)' }} />
                   </div>
                   <p className="relative text-white font-bold text-base leading-snug">Más de nuestros clientes nos recomiendan en Google</p>
                   <p className="relative text-slate-300 text-sm leading-relaxed mt-2">Conocé todas las opiniones reales de quienes confiaron en nuestro trabajo.</p>
@@ -517,7 +517,7 @@ export default function Home() {
                   Escribinos por WhatsApp
                 </a>
               )}
-              <Link to="/presupuesto" className="inline-flex items-center justify-center gap-2 w-full px-6 py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors active:scale-[0.98]">
+              <Link to="/presupuesto" className="inline-flex items-center justify-center gap-2 w-full px-6 py-4 keep-white text-sidebar font-bold rounded-xl hover:bg-slate-100 transition-colors active:scale-[0.98]">
                 Solicitar presupuesto <ArrowRight size={17} />
               </Link>
             </div>
