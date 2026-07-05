@@ -113,18 +113,21 @@
 }
 .dark {
   color-scheme: dark;
-  --c-bg: #0F172A;
-  --c-card: #1E293B;
-  --c-muted: #172234;
-  --c-muted2: #24334B;
-  --c-fg: #E8EDF4;
-  --c-fg2: #CBD5E1;
-  --c-fg3: #B8C4D6;
-  --c-mut: #94A3B8;
-  --c-mut2: #7E8CA3;
-  --c-mut3: #64748B;
-  --c-border: #334155;
-  --c-border2: #273449;
+  /* Superficies con elevación (más claro = más elevado). Sin negro puro. */
+  --c-bg: #111827;      /* fondo base (0dp) */
+  --c-card: #1E293B;    /* tarjetas / modales (1dp) */
+  --c-muted: #273449;   /* inputs, hover, headers (raised) */
+  --c-muted2: #313F57;  /* chips / énfasis */
+  /* Texto: blanco con opacidad (alto/medio/bajo énfasis, Material) */
+  --c-fg: rgba(255,255,255,0.92);
+  --c-fg2: rgba(255,255,255,0.80);
+  --c-fg3: rgba(255,255,255,0.72);
+  --c-mut: rgba(255,255,255,0.60);
+  --c-mut2: rgba(255,255,255,0.46);
+  --c-mut3: rgba(255,255,255,0.38);
+  /* Bordes/divisores: overlay blanco sutil */
+  --c-border: rgba(255,255,255,0.12);
+  --c-border2: rgba(255,255,255,0.07);
 }
 
 /* Transición suave al cambiar de tema */
@@ -138,20 +141,20 @@
 .dark *::-webkit-scrollbar-thumb { background-color: #475569; }
 
 /* Clases de componente */
-.dark .card { background-color: var(--c-card); border-color: var(--c-border); }
-.dark .input, .dark .select, .dark .textarea { background-color: var(--c-card); border-color: var(--c-border); color: var(--c-fg); }
+.dark .card { background-color: var(--c-card); border-color: var(--c-border); box-shadow: none; }
+.dark .input, .dark .select, .dark .textarea { background-color: var(--c-muted); border-color: var(--c-border); color: var(--c-fg); }
 .dark .input::placeholder, .dark .textarea::placeholder { color: var(--c-mut2); }
 .dark .label { color: var(--c-fg3); }
 .dark .hint { color: var(--c-mut2); }
-.dark .btn-secondary { background-color: var(--c-card); color: var(--c-fg2); border-color: var(--c-border); }
+.dark .btn-secondary { background-color: var(--c-muted); color: var(--c-fg); border-color: var(--c-border); }
 .dark .btn-secondary:hover { background-color: var(--c-muted2); }
 .dark .btn-ghost { color: var(--c-fg3); }
-.dark .btn-ghost:hover { background-color: var(--c-muted2); color: var(--c-fg); }
+.dark .btn-ghost:hover { background-color: var(--c-muted); color: var(--c-fg); }
 .dark .table thead th { background-color: var(--c-muted); color: var(--c-mut); border-color: var(--c-border); }
 .dark .table tbody td { border-color: var(--c-border2); color: var(--c-fg2); }
 .dark .table tbody tr:hover { background-color: var(--c-muted); }
 .dark .badge-neutral { background-color: var(--c-muted2); color: var(--c-fg2); }
-.dark .glass { background-color: rgba(15, 23, 42, 0.72); }
+.dark .glass { background-color: rgba(17, 24, 39, 0.8); }
 .dark .chip { background-color: var(--c-muted2); color: var(--c-fg2); }
 .dark .divider { border-color: var(--c-border2); }
 .dark .skeleton { background-color: var(--c-muted2); }
@@ -183,6 +186,31 @@
 .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border2); }
 .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border); }
 .dark .divide-slate-200\/70 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border); }
+
+/* Acento azul: un tono más claro en oscuro para que no “vibre” (Material) */
+.dark .text-primary { color: #7DA9FF; }
+
+/* Estados semánticos como chips tonales (no pastillas claras) */
+.dark .badge-pendiente  { background-color: rgba(245,158,11,0.16); color: #FCD34D; }
+.dark .badge-proceso    { background-color: rgba(59,130,246,0.18); color: #93C5FD; }
+.dark .badge-finalizado { background-color: rgba(34,197,94,0.16);  color: #86EFAC; }
+.dark .badge-demorado   { background-color: rgba(239,68,68,0.16);  color: #FCA5A5; }
+
+.dark .bg-green-50,  .dark .bg-green-100  { background-color: rgba(34,197,94,0.15); }
+.dark .bg-red-50,    .dark .bg-red-100    { background-color: rgba(239,68,68,0.15); }
+.dark .bg-amber-50,  .dark .bg-amber-100  { background-color: rgba(245,158,11,0.15); }
+.dark .bg-blue-50,   .dark .bg-blue-100   { background-color: rgba(59,130,246,0.15); }
+.dark .bg-violet-50 { background-color: rgba(139,92,246,0.15); }
+
+.dark .text-green-700,  .dark .text-green-600  { color: #86EFAC; }
+.dark .text-red-700,    .dark .text-red-600    { color: #FCA5A5; }
+.dark .text-amber-700,  .dark .text-amber-600  { color: #FCD34D; }
+.dark .text-blue-700,   .dark .text-blue-600   { color: #93C5FD; }
+.dark .text-violet-600 { color: #C4B5FD; }
+
+.dark .border-green-100 { border-color: rgba(34,197,94,0.25); }
+.dark .border-red-100   { border-color: rgba(239,68,68,0.25); }
+.dark .border-amber-100 { border-color: rgba(245,158,11,0.25); }
 
 /* Se mantiene blanco puro donde es intencional (logos, punto del pin) */
 .keep-white { background-color: #FFFFFF !important; }
