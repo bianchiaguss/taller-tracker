@@ -47,9 +47,9 @@ function PanelDetalle({ solicitud, onClose, onUpdate }) {
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, pointerEvents: 'none' }}
       className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-start justify-end" onClick={onClose}>
-      <motion.div initial={{ x: '100%' }} animate={{ x: 0 }}
+      <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%', pointerEvents: 'none' }}
         transition={{ type: 'spring', stiffness: 360, damping: 38 }}
         className="bg-white h-full w-full max-w-lg shadow-elevated overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="sticky top-0 glass border-b border-slate-100 px-6 py-4 flex items-center justify-between z-10">
