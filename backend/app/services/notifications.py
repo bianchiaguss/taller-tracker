@@ -103,6 +103,14 @@ def expediente_creado(estado: str) -> Notificacion:
 
 
 def cambio_estado(nuevo_estado: str) -> Notificacion:
+    n = nuevo_estado.lower()
+    if "listo" in n or "entrega" in n:
+        return Notificacion(
+            asunto="¡Tu vehículo está listo para retirar! 🎉",
+            titulo="¡Trabajo finalizado!",
+            descripcion="Terminamos el trabajo y tu vehículo ya está listo para que lo vengas a "
+                        "retirar. Coordiná con nosotros el día y horario del retiro.",
+        )
     return Notificacion(
         asunto=f"Tu vehículo avanzó a: {nuevo_estado}",
         titulo=f"Nueva etapa: {nuevo_estado}",
