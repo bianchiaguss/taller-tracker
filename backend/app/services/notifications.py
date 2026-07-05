@@ -141,9 +141,9 @@ def nuevo_documento(nombre_documento: str, tipo: str) -> Notificacion:
 
 def entregado(url_resena: str) -> Notificacion:
     return Notificacion(
-        asunto="¡Tu vehículo está listo para retirar! 🎉",
-        titulo="¡Trabajo finalizado!",
-        descripcion="Tu vehículo ya está listo para retirar. ¡Gracias por confiar en nosotros! "
-                    f"Si querés, dejanos tu reseña en Google: {url_resena}",
+        asunto="¡Gracias por confiar en nosotros! 🎉",
+        titulo="¡Tu vehículo fue entregado!",
+        descripcion="Tu vehículo fue entregado. ¡Gracias por elegirnos y confiar en nuestro trabajo! "
+                    f"Si quedaste conforme, nos ayudaría muchísimo que nos dejes tu reseña en Google: {url_resena}",
         cta_texto="Ver mi expediente",
     )

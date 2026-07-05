@@ -42,7 +42,7 @@ function getRecomendacion(estado, todosEstados) {
   const n = (estado?.nombre || '').toLowerCase()
   const total = todosEstados.length || 1
   const progreso = Math.round((estado?.orden / total) * 100)
-  if (estado?.es_estado_final) return { icono: '🎉', titulo: '¡Tu vehículo está listo!', mensaje: 'La reparación terminó. Coordiná con el taller para pasar a retirarlo.' }
+  if (estado?.es_estado_final) return { icono: '🎉', titulo: '¡Tu vehículo fue entregado!', mensaje: '¡Gracias por confiar en nosotros! Si quedaste conforme, nos encantaría que nos dejes tu reseña.' }
   if (n.includes('ingreso') || n.includes('recepci')) return { icono: '📋', titulo: 'Vehículo recibido', mensaje: 'Registramos tu auto en el sistema. En breve comenzamos la evaluación de los daños.' }
   if (n.includes('diagn')) return { icono: '🔍', titulo: 'Diagnóstico en curso', mensaje: 'Estamos evaluando todos los daños para definir el plan de trabajo.' }
   if (n.includes('desarme')) return { icono: '🔩', titulo: 'Proceso de desarme', mensaje: 'Desarmamos las piezas necesarias para acceder a las zonas afectadas.' }
@@ -141,7 +141,7 @@ const TIPO_META = {
 }
 
 function accionEtapa(estado) {
-  if (estado.es_estado_final) return 'La reparación finalizó y el vehículo quedó listo para retirar.'
+  if (estado.es_estado_final) return 'El vehículo fue entregado. ¡Gracias por confiar en nosotros!'
   const n = (estado.nombre || '').toLowerCase()
   if (n.includes('ingreso') || n.includes('recepci')) return 'El vehículo fue recibido y se registró el expediente.'
   if (n.includes('diagn')) return 'Se inició la evaluación de los daños.'
