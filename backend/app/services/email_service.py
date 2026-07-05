@@ -53,6 +53,8 @@ def send_email(destinatario: str, asunto: str, html: str, reintentos: int = 3) -
     for intento in range(1, reintentos + 1):
         try:
             resp = httpx.post(_BREVO_URL, json=payload, headers=headers, timeout=15)
+            if resp.status_code >= 400:
+                logger.error("Brevo %s: %s", resp.status_code, resp.text)
             resp.raise_for_status()
             logger.info("Email enviado a %s | %s", destinatario, asunto)
             return True
