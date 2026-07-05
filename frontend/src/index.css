@@ -113,16 +113,16 @@
 }
 .dark {
   color-scheme: dark;
-  /* Superficies con elevación (más claro = más elevado). Sin negro puro. */
-  --c-bg: #111827;      /* fondo base (0dp) */
-  --c-card: #1E293B;    /* tarjetas / modales (1dp) */
-  --c-muted: #273449;   /* inputs, hover, headers (raised) */
-  --c-muted2: #313F57;  /* chips / énfasis */
-  /* Texto: blanco con opacidad (alto/medio/bajo énfasis, Material) */
+  /* "Negro suave": casi negro (sin #000), tarjetas despegadas por elevación. */
+  --c-bg: #0A0A0C;      /* fondo base */
+  --c-card: #151517;    /* tarjetas / modales */
+  --c-muted: #1F1F23;   /* inputs, hover, headers (raised) */
+  --c-muted2: #29292F;  /* chips / énfasis */
+  /* Texto: blanco con opacidad (alto/medio/bajo énfasis) */
   --c-fg: rgba(255,255,255,0.92);
   --c-fg2: rgba(255,255,255,0.80);
   --c-fg3: rgba(255,255,255,0.72);
-  --c-mut: rgba(255,255,255,0.60);
+  --c-mut: rgba(255,255,255,0.62);
   --c-mut2: rgba(255,255,255,0.46);
   --c-mut3: rgba(255,255,255,0.38);
   /* Bordes/divisores: overlay blanco sutil */
@@ -154,7 +154,7 @@
 .dark .table tbody td { border-color: var(--c-border2); color: var(--c-fg2); }
 .dark .table tbody tr:hover { background-color: var(--c-muted); }
 .dark .badge-neutral { background-color: var(--c-muted2); color: var(--c-fg2); }
-.dark .glass { background-color: rgba(17, 24, 39, 0.8); }
+.dark .glass { background-color: rgba(10, 10, 12, 0.82); }
 .dark .chip { background-color: var(--c-muted2); color: var(--c-fg2); }
 .dark .divider { border-color: var(--c-border2); }
 .dark .skeleton { background-color: var(--c-muted2); }
@@ -187,8 +187,8 @@
 .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border); }
 .dark .divide-slate-200\/70 > :not([hidden]) ~ :not([hidden]) { border-color: var(--c-border); }
 
-/* Acento azul: un tono más claro en oscuro para que no “vibre” (Material) */
-.dark .text-primary { color: #7DA9FF; }
+/* Acento azul para textos/íconos sobre el fondo casi negro */
+.dark .text-primary { color: #5B8DEF; }
 
 /* Estados semánticos como chips tonales (no pastillas claras) */
 .dark .badge-pendiente  { background-color: rgba(245,158,11,0.16); color: #FCD34D; }
