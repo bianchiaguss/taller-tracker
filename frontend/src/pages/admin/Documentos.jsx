@@ -66,7 +66,7 @@ function ModalSubir({ expedientes, onClose, onSubido }) {
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <Field label="Expediente" hint="Elegí a qué expediente pertenece.">
+          <Field label="Expediente">
             <select className="select" required value={expId} onChange={e => setExpId(e.target.value)}>
               <option value="">Seleccionar expediente…</option>
               {expedientes.map(e => (
@@ -74,7 +74,7 @@ function ModalSubir({ expedientes, onClose, onSubido }) {
               ))}
             </select>
           </Field>
-          <Field label="Nombre del documento" hint="Nombre claro para identificarlo.">
+          <Field label="Nombre del documento">
             <TextInput capitalize required value={nombre} onChange={setNombre} placeholder="Ej.: Presupuesto N°001" />
           </Field>
           <div className="grid grid-cols-2 gap-3">

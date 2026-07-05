@@ -50,16 +50,16 @@ function ModalOpinion({ onClose, onCreated }) {
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <Field label="Nombre del cliente" hint="Nombre y apellido de quien opina.">
+          <Field label="Nombre del cliente">
             <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Ej.: Juan Pérez" />
           </Field>
-          <Field label="Fecha" hint="Fecha de la reseña.">
+          <Field label="Fecha">
             <input className="input" type="date" required value={form.fecha} onChange={set('fecha')} />
           </Field>
-          <Field label="Calificación" hint="Tocá las estrellas para calificar.">
+          <Field label="Calificación">
             <StarPicker value={form.calificacion} onChange={v => setForm(p => ({ ...p, calificacion: v }))} />
           </Field>
-          <Field label="Comentario" hint="Lo que dijo el cliente sobre el servicio.">
+          <Field label="Comentario">
             <TextInput as="textarea" capitalize="sentence" className="textarea" rows={4} required value={form.comentario} onChange={setV('comentario')} placeholder="Ej.: Excelente atención y el auto quedó impecable." />
           </Field>
           {error && <p className="error-text"><AlertTriangle size={13} /> {error}</p>}

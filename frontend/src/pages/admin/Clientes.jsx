@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
 import { Plus, X, Car, Pencil, Trash2, Users, AlertTriangle } from 'lucide-react'
-import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner, Field, TextInput } from '../../components/ui'
+import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner, Field, TextInput, PhoneInput } from '../../components/ui'
 
 function ModalHeader({ title, onClose }) {
   return (
@@ -52,26 +52,26 @@ function ModalCliente({ inicial, onClose, onSaved }) {
       <ModalHeader title={editando ? 'Editar cliente' : 'Nuevo cliente'} onClose={onClose} />
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Nombre" hint="Ingresá el nombre del cliente.">
+          <Field label="Nombre">
             <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Ej.: Juan" />
           </Field>
-          <Field label="Apellido" hint="Ingresá el apellido.">
+          <Field label="Apellido">
             <TextInput capitalize required value={form.apellido} onChange={setV('apellido')} placeholder="Ej.: Pérez" />
           </Field>
         </div>
-        <Field label="Email" hint="Ej.: nombre@correo.com">
+        <Field label="Email">
           <input className="input" type="email" required value={form.email} onChange={set('email')} placeholder="nombre@correo.com" />
         </Field>
         {!editando && (
-          <Field label="Contraseña inicial" hint="Mínimo 8 caracteres.">
+          <Field label="Contraseña inicial">
             <input className="input" type="password" required minLength={8} value={form.password} onChange={set('password')} placeholder="Mínimo 8 caracteres" />
           </Field>
         )}
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Teléfono" hint="Ej.: +54 11 1234-5678">
-            <input className="input" type="tel" value={form.telefono} onChange={set('telefono')} placeholder="+54 11 1234-5678" />
+          <Field label="Teléfono">
+            <PhoneInput value={form.telefono} onChange={setV('telefono')} />
           </Field>
-          <Field label="DNI / CUIT" hint="Solo números, sin puntos ni guiones.">
+          <Field label="DNI / CUIT">
             <input className="input" inputMode="numeric" value={form.dni_cuit} onChange={e => setForm(p => ({ ...p, dni_cuit: e.target.value.replace(/\D/g, '') }))} placeholder="20304050607" />
           </Field>
         </div>
@@ -109,26 +109,26 @@ function ModalVehiculo({ clienteId, onClose, onCreated }) {
       <ModalHeader title="Agregar vehículo" onClose={onClose} />
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Marca" hint="Ej.: Ford, Volkswagen…">
+          <Field label="Marca">
             <TextInput capitalize required value={form.marca} onChange={setV('marca')} placeholder="Ford" />
           </Field>
-          <Field label="Modelo" hint="Ej.: Focus, Gol…">
+          <Field label="Modelo">
             <TextInput capitalize required value={form.modelo} onChange={setV('modelo')} placeholder="Focus" />
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Año" hint="Ej.: 2020">
+          <Field label="Año">
             <input className="input" type="number" inputMode="numeric" min="1900" max="2100" value={form.anio} onChange={set('anio')} placeholder="2020" />
           </Field>
-          <Field label="Patente" hint="Formato AB123CD o ABC123.">
+          <Field label="Patente">
             <input className="input font-mono uppercase" required value={form.patente} onChange={setUpper('patente')} placeholder="AB123CD" />
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Color" hint="Ej.: Gris plata.">
+          <Field label="Color">
             <TextInput capitalize value={form.color} onChange={setV('color')} placeholder="Gris" />
           </Field>
-          <Field label="VIN" hint="17 caracteres (opcional).">
+          <Field label="VIN">
             <input className="input font-mono text-xs uppercase" maxLength={17} value={form.vin} onChange={setUpper('vin')} placeholder="8AFDR5FD..." />
           </Field>
         </div>

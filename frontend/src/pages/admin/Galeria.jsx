@@ -46,25 +46,25 @@ function ModalNuevoItem({ onClose, onCreated }) {
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Marca" hint="Ej.: Ford, Volkswagen…">
+            <Field label="Marca">
               <TextInput capitalize required value={form.marca} onChange={setV('marca')} placeholder="Ford" />
             </Field>
-            <Field label="Modelo" hint="Ej.: Focus, Gol…">
+            <Field label="Modelo">
               <TextInput capitalize required value={form.modelo} onChange={setV('modelo')} placeholder="Focus" />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Año" hint="Ej.: 2020">
+            <Field label="Año">
               <input className="input" type="number" inputMode="numeric" min="1900" max="2100" value={form.anio} onChange={set('anio')} placeholder="2020" />
             </Field>
-            <Field label="Orden" hint="Posición en la galería.">
+            <Field label="Orden">
               <input className="input" type="number" inputMode="numeric" value={form.orden} onChange={set('orden')} placeholder="0" />
             </Field>
           </div>
-          <Field label="Tipo de reparación" hint="Trabajo realizado.">
+          <Field label="Tipo de reparación">
             <TextInput capitalize required value={form.tipo_reparacion} onChange={setV('tipo_reparacion')} placeholder="Ej.: Chapa y pintura completa" />
           </Field>
-          <Field label="Descripción (opcional)" hint="Detalle del trabajo mostrado.">
+          <Field label="Descripción (opcional)">
             <TextInput as="textarea" capitalize="sentence" className="textarea" rows={2} value={form.descripcion} onChange={setV('descripcion')} placeholder="Ej.: Restauración completa tras siniestro." />
           </Field>
 

@@ -36,10 +36,10 @@ function ModalEstado({ inicial, onClose, onSaved }) {
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <Field label="Nombre" hint="Nombre de la etapa.">
+          <Field label="Nombre">
             <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Ej.: Pintura" />
           </Field>
-          <Field label="Orden" hint="Posición en el flujo (1 = primera).">
+          <Field label="Orden">
             <input className="input" type="number" inputMode="numeric" min="1" required value={form.orden} onChange={set('orden')} />
           </Field>
           <div>
@@ -56,7 +56,7 @@ function ModalEstado({ inicial, onClose, onSaved }) {
               <input className="input font-mono" value={form.color} onChange={set('color')} placeholder="#2563EB" />
             </div>
           </div>
-          <Field label="Descripción (opcional)" hint="Breve explicación de la etapa.">
+          <Field label="Descripción (opcional)">
             <TextInput capitalize="sentence" value={form.descripcion || ''} onChange={setV('descripcion')} placeholder="Ej.: El vehículo está en cabina de pintura." />
           </Field>
           <div className="flex items-center gap-2">

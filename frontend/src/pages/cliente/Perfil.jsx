@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/client'
 import { User, Lock, Bell, Check, AlertCircle, Eye, EyeOff, Mail, MessageCircle } from 'lucide-react'
-import { Page, PageHeader, Reveal, Spinner, Field, TextInput } from '../../components/ui'
+import { Page, PageHeader, Reveal, Spinner, Field, TextInput, PhoneInput } from '../../components/ui'
 
 function Msg({ msg }) {
   if (!msg) return null
@@ -121,17 +121,17 @@ export default function Perfil() {
         {editDatos ? (
           <form onSubmit={handleSaveDatos} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Nombre" hint="Ingresá tu nombre.">
+              <Field label="Nombre">
                 <TextInput capitalize value={form.nombre} onChange={setV('nombre')} required placeholder="Juan" />
               </Field>
-              <Field label="Apellido" hint="Ingresá tu apellido.">
+              <Field label="Apellido">
                 <TextInput capitalize value={form.apellido} onChange={setV('apellido')} required placeholder="Pérez" />
               </Field>
             </div>
-            <Field label="Teléfono" hint="Ej.: +54 11 1234-5678">
-              <input className="input" type="tel" value={form.telefono} onChange={set('telefono')} placeholder="+54 11 1234-5678" />
+            <Field label="Teléfono">
+              <PhoneInput value={form.telefono} onChange={setV('telefono')} />
             </Field>
-            <Field label="DNI / CUIT" hint="Solo números, sin puntos ni guiones.">
+            <Field label="DNI / CUIT">
               <input className="input" inputMode="numeric" value={dniCuit} onChange={e => setDniCuit(e.target.value.replace(/\D/g, ''))} placeholder="20304050607" />
             </Field>
             <div className="flex gap-2 pt-1">
@@ -207,15 +207,15 @@ export default function Perfil() {
         </h3>
         <form onSubmit={handleCambiarPwd} className="space-y-3">
           {[
-            { key: 'actual', label: 'Contraseña actual', hint: 'La que usás para ingresar hoy.' },
-            { key: 'nuevo', label: 'Nueva contraseña', hint: 'Mínimo 8 caracteres.' },
-            { key: 'confirmar', label: 'Confirmar nueva contraseña', hint: 'Repetí la nueva contraseña.' },
-          ].map(({ key, label, hint }) => (
+            { key: 'actual', label: 'Contraseña actual', ph: 'Tu contraseña actual' },
+            { key: 'nuevo', label: 'Nueva contraseña', ph: 'Mínimo 8 caracteres' },
+            { key: 'confirmar', label: 'Confirmar nueva contraseña', ph: 'Repetí la nueva contraseña' },
+          ].map(({ key, label, ph }) => (
             <div key={key}>
               <label className="label">{label}</label>
               <div className="relative">
                 <input className="input pr-10" type={showPwd ? 'text' : 'password'}
-                  value={pwd[key]} onChange={setPwdF(key)} required minLength={key === 'actual' ? undefined : 8} placeholder="••••••••" />
+                  value={pwd[key]} onChange={setPwdF(key)} required minLength={key === 'actual' ? undefined : 8} placeholder={ph} />
                 {key === 'actual' && (
                   <button type="button" onClick={() => setShowPwd(p => !p)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -223,7 +223,6 @@ export default function Perfil() {
                   </button>
                 )}
               </div>
-              <p className="hint">{hint}</p>
             </div>
           ))}
           <Msg msg={pwdMsg} />

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/client'
 import { Wrench, Eye, EyeOff, AlertCircle, Clock, Camera, MapPin, BellRing, CheckCircle2 } from 'lucide-react'
-import { Spinner, Field, TextInput } from '../../components/ui'
+import { Spinner, Field, TextInput, PhoneInput } from '../../components/ui'
 
 const BENEFICIOS = [
   { icon: Clock, t: 'Seguimiento en vivo', d: 'Mirá en qué etapa está tu vehículo en cada momento.' },
@@ -114,20 +114,20 @@ export default function Registro() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Nombre" hint="Ingresá tu nombre.">
+              <Field label="Nombre">
                 <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Juan" />
               </Field>
-              <Field label="Apellido" hint="Ingresá tu apellido.">
+              <Field label="Apellido">
                 <TextInput capitalize required value={form.apellido} onChange={setV('apellido')} placeholder="Pérez" />
               </Field>
             </div>
-            <Field label="Email" hint="Ej.: nombre@correo.com">
+            <Field label="Email">
               <input className="input" type="email" required value={form.email} onChange={set('email')} placeholder="nombre@correo.com" />
             </Field>
-            <Field label="Teléfono (opcional)" hint="Ej.: +54 11 1234-5678">
-              <input className="input" type="tel" value={form.telefono} onChange={set('telefono')} placeholder="+54 11 1234-5678" />
+            <Field label="Teléfono (opcional)">
+              <PhoneInput value={form.telefono} onChange={setV('telefono')} />
             </Field>
-            <Field label="Contraseña" hint="Mínimo 8 caracteres.">
+            <Field label="Contraseña">
               <div className="relative">
                 <input className="input pr-10" type={showPwd ? 'text' : 'password'} required minLength={8}
                   value={form.password} onChange={set('password')} placeholder="Mínimo 8 caracteres" />
@@ -137,7 +137,7 @@ export default function Registro() {
                 </button>
               </div>
             </Field>
-            <Field label="Confirmar contraseña" hint="Repetí la misma contraseña.">
+            <Field label="Confirmar contraseña">
               <input className="input" type="password" required value={form.confirmar} onChange={set('confirmar')} placeholder="Repetí la contraseña" />
             </Field>
 

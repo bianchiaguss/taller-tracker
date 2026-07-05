@@ -99,6 +99,34 @@ export function MoneyInput({ value, onChange, className = 'input', ...props }) {
   return <input ref={ref} inputMode="numeric" className={className} value={agruparMiles(soloDigitos(value))} onChange={handle} {...props} />
 }
 
+// Teléfono con prefijo +54 fijo y máscara (+54 9 11 1234-5678 / +54 11 1234-5678).
+// Guarda el string formateado; el cursor queda al final (escritura natural).
+function formatTelefono(v) {
+  let d = String(v ?? '').replace(/\D/g, '')
+  if (d.startsWith('54')) d = d.slice(2)
+  if (!d) return ''
+  let nueve = ''
+  if (d[0] === '9') { nueve = '9 '; d = d.slice(1) }
+  let area = '', local = d
+  if (d.length > 8) { area = d.slice(0, d.length - 8); local = d.slice(d.length - 8) }
+  if (local.length > 4) local = local.slice(0, -4) + '-' + local.slice(-4)
+  return `+54 ${nueve}${area ? area + ' ' : ''}${local}`.trimEnd()
+}
+export function PhoneInput({ value, onChange, className = 'input', ...props }) {
+  const ref = useRef(null)
+  const caret = useCaret(ref)
+  const handle = e => {
+    let d = String(e.target.value).replace(/\D/g, '')
+    if (d.startsWith('54')) d = d.slice(2)
+    if (!d) { onChange(''); caret.current = 4; return }
+    const out = formatTelefono(e.target.value)
+    caret.current = out.length
+    onChange(out)
+  }
+  return <input ref={ref} type="tel" inputMode="numeric" className={className}
+    value={value ? formatTelefono(value) : '+54 '} onChange={handle} {...props} />
+}
+
 /* ── PageHeader ──────────────────────────────────── */
 export function PageHeader({ title, subtitle, icon: Icon, actions }) {
   return (

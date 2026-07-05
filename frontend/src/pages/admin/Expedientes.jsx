@@ -43,7 +43,7 @@ function ModalNuevoExpediente({ onClose, onCreated }) {
         <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
       </div>
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
-        <Field label="Vehículo" hint={vehiculos.length === 0 ? undefined : 'Elegí el vehículo del cliente.'}>
+        <Field label="Vehículo">
           <select className="select" required value={form.vehiculo_id} onChange={set('vehiculo_id')}>
             <option value="">Seleccionar vehículo…</option>
             {vehiculos.map(v => <option key={v.id} value={v.id}>{v.marca} {v.modelo} — {v.patente}</option>)}
@@ -51,17 +51,17 @@ function ModalNuevoExpediente({ onClose, onCreated }) {
           {vehiculos.length === 0 && <p className="text-xs text-amber-600 mt-1">No hay vehículos. Creá un cliente con vehículo primero.</p>}
         </Field>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Fecha de ingreso" hint="Día en que ingresó el vehículo.">
+          <Field label="Fecha de ingreso">
             <input className="input" type="date" required value={form.fecha_ingreso} onChange={set('fecha_ingreso')} />
           </Field>
-          <Field label="Entrega estimada" hint="Opcional. Podés cambiarla luego.">
+          <Field label="Entrega estimada">
             <input className="input" type="date" value={form.fecha_estimada_entrega} onChange={set('fecha_estimada_entrega')} />
           </Field>
         </div>
-        <Field label="Descripción inicial" hint="Detallá el trabajo a realizar.">
+        <Field label="Descripción inicial">
           <TextInput as="textarea" capitalize="sentence" className="textarea" rows={3} value={form.descripcion_inicial} onChange={setV('descripcion_inicial')} placeholder="Ej.: Reparación de puerta trasera derecha y pintura del lateral." />
         </Field>
-        <Field label="Presupuesto estimado ($)" hint="Solo el monto; se formatea automáticamente.">
+        <Field label="Presupuesto estimado ($)">
           <MoneyInput value={form.presupuesto_estimado} onChange={setV('presupuesto_estimado')} placeholder="0" />
         </Field>
         <label className="flex items-center gap-2.5 cursor-pointer">
@@ -70,10 +70,10 @@ function ModalNuevoExpediente({ onClose, onCreated }) {
         </label>
         {form.es_siniestro && (
           <div className="grid grid-cols-2 gap-3 pl-6 border-l-2 border-primary/20">
-            <Field label="Aseguradora" hint="Nombre de la compañía.">
+            <Field label="Aseguradora">
               <TextInput capitalize value={form.aseguradora} onChange={setV('aseguradora')} placeholder="Ej.: La Caja" />
             </Field>
-            <Field label="N° siniestro" hint="Número asignado por la aseguradora.">
+            <Field label="N° siniestro">
               <input className="input font-mono" value={form.numero_siniestro} onChange={set('numero_siniestro')} placeholder="Ej.: 100-2024-0001" />
             </Field>
           </div>
