@@ -69,6 +69,25 @@ def _enviar_meta(telefono: str, mensaje: str) -> None:
     ).raise_for_status()
 
 
+def _enviar_callmebot(telefono: str, mensaje: str) -> None:
+    """CallMeBot (gratis, para DEMO). Solo envía a números que activaron el bot:
+    cada número debe registrar su propia apikey escribiéndole al bot una vez."""
+    import httpx
+    limpio = "".join(c for c in telefono if c.isdigit())
+    if limpio.startswith("0"):
+        limpio = "54" + limpio[1:]
+    elif not limpio.startswith("54") and len(limpio) <= 10:
+        limpio = "54" + limpio
+    # WhatsApp Argentina usa el 9 tras el código de país (54 9 <area> <numero>)
+    if limpio.startswith("54") and not limpio.startswith("549"):
+        limpio = "549" + limpio[2:]
+    httpx.get(
+        "https://api.callmebot.com/whatsapp.php",
+        params={"phone": limpio, "text": mensaje, "apikey": settings.WHATSAPP_API_KEY},
+        timeout=15,
+    ).raise_for_status()
+
+
 def enviar_notificacion(ctx: dict, evento) -> None:
     """Canal WhatsApp del sistema de notificaciones: arma el texto desde la
     misma Notificacion que usa el email y delega en `enviar_whatsapp`."""
@@ -101,6 +120,9 @@ def enviar_whatsapp(telefono: str | None, mensaje: str) -> None:
             _enviar_evolution(telefono, mensaje)
         elif backend == "meta":
             _enviar_meta(telefono, mensaje)
+        elif backend == "callmebot":
+            _enviar_callmebot(telefono, mensaje)
+            logger.info("WhatsApp enviado a %s", telefono)
         else:
             logger.warning("WHATSAPP_BACKEND desconocido: %s", backend)
     except Exception:
