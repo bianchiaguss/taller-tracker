@@ -22,7 +22,7 @@ from app.schemas.expediente import (
     ExpedienteOut,
     ExpedienteUpdate,
 )
-from app.services.events import EventBus
+from app.services import notifications
 
 router = APIRouter(prefix="/api/expedientes", tags=["expedientes"])
 
@@ -96,6 +96,7 @@ def crear_expediente(data: ExpedienteCreate, db: Session = Depends(get_db), actu
         usuario_id=actual.id, observacion="Expediente creado",
     ))
     db.commit(); db.refresh(exp)
+    notifications.notificar(exp, notifications.expediente_creado(primer_estado.nombre))
     return exp
 
 
@@ -150,14 +151,12 @@ def cambiar_estado(
             exp.token_resena = token
             db.commit(); db.refresh(exp)
             cfg = db.query(ConfiguracionSitio).filter(ConfiguracionSitio.clave == "google_maps_review_url").first()
-            EventBus.emit("trabajo_finalizado", expediente=exp, actor=actual, extra={
-                "token_resena": token,
-                "google_review_url": cfg.valor if cfg else None,
-            })
+            url_resena = (cfg.valor if cfg and cfg.valor else f"{settings.FRONTEND_URL}/resena/{token}")
+            notifications.notificar(exp, notifications.entregado(url_resena))
             return exp
 
     db.commit(); db.refresh(exp)
-    EventBus.emit("cambio_estado", expediente=exp, actor=actual, extra={"nuevo_estado": nuevo_estado.nombre})
+    notifications.notificar(exp, notifications.cambio_estado(nuevo_estado.nombre))
     return exp
 
 
@@ -198,11 +197,7 @@ def cambiar_fecha_estimada(
     db.commit(); db.refresh(exp)
 
     def _fmt(d): return d.strftime("%d/%m/%Y") if d else None
-    EventBus.emit("cambio_fecha_estimada", expediente=exp, actor=actual, extra={
-        "fecha_anterior": _fmt(fecha_anterior),
-        "fecha_nueva": _fmt(fecha_nueva),
-        "motivo": data.motivo,
-    })
+    notifications.notificar(exp, notifications.cambio_fecha(_fmt(fecha_anterior), _fmt(fecha_nueva), data.motivo))
     return exp
 
 

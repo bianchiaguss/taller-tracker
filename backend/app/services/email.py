@@ -13,33 +13,10 @@ logger = logging.getLogger("email")
 
 
 def _enviar(destinatario: str, asunto: str, cuerpo_html: str) -> None:
-    if not settings.RESEND_API_KEY:
-        logger.info("[EMAIL SIMULADO] Para: %s | Asunto: %s\n%s", destinatario, asunto, cuerpo_html)
-        return
-
-    import httpx
-
-    try:
-        response = httpx.post(
-            "https://api.resend.com/emails",
-            headers={"Authorization": f"Bearer {settings.RESEND_API_KEY}"},
-            json={
-                "from": settings.EMAIL_FROM,
-                "to": [destinatario],
-                "subject": asunto,
-                "html": cuerpo_html,
-            },
-            timeout=10,
-        )
-        response.raise_for_status()
-    except httpx.HTTPError:
-        # La solicitud ya fue guardada. Un proveedor de correo caido no debe
-        # transformar una operacion exitosa en un error 500 para el usuario.
-        logger.exception(
-            "No se pudo enviar el email a %s con asunto %s",
-            destinatario,
-            asunto,
-        )
+    # Delega en el servicio único de correo (Gmail SMTP). Estas funciones
+    # (solicitudes / reseñas) usan HTML propio, por eso envían directo.
+    from app.services.email_service import send_email
+    send_email(destinatario, asunto, cuerpo_html)
 
 
 def notificar_cambio_estado(

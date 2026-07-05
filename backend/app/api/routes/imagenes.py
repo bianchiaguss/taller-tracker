@@ -9,6 +9,7 @@ from app.models.expediente import Expediente
 from app.models.imagen import ImagenExpediente
 from app.models.usuario import Usuario
 from app.schemas.expediente import ImagenOut
+from app.services import notifications
 from app.services.storage import guardar_imagen
 
 router = APIRouter(prefix="/api/expedientes/{expediente_id}/imagenes", tags=["imagenes"])
@@ -23,7 +24,8 @@ def subir_imagen(
     db: Session = Depends(get_db),
     _: Usuario = Depends(require_admin),
 ):
-    if not db.get(Expediente, expediente_id):
+    exp = db.get(Expediente, expediente_id)
+    if not exp:
         raise HTTPException(status_code=404, detail="Expediente no encontrado")
 
     try:
@@ -40,4 +42,5 @@ def subir_imagen(
     db.add(imagen)
     db.commit()
     db.refresh(imagen)
+    notifications.notificar(exp, notifications.nueva_foto())
     return imagen

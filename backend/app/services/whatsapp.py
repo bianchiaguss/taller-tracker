@@ -69,6 +69,19 @@ def _enviar_meta(telefono: str, mensaje: str) -> None:
     ).raise_for_status()
 
 
+def enviar_notificacion(ctx: dict, evento) -> None:
+    """Canal WhatsApp del sistema de notificaciones: arma el texto desde la
+    misma Notificacion que usa el email y delega en `enviar_whatsapp`."""
+    mensaje = (
+        f"*{evento.titulo}*\n\n"
+        f"Hola {ctx['nombre']}, {evento.descripcion}\n\n"
+        f"🚗 {ctx['vehiculo']} ({ctx['patente']})\n"
+        f"📋 {ctx['numero_expediente']} · {ctx['estado']}\n"
+        f"🔗 {ctx['url']}"
+    )
+    enviar_whatsapp(ctx["telefono"], mensaje)
+
+
 def enviar_whatsapp(telefono: str | None, mensaje: str) -> None:
     """Punto de entrada principal. Silencioso si no hay configuración."""
     if not telefono:

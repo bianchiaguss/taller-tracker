@@ -22,9 +22,14 @@ class Settings(BaseSettings):
     UPLOADS_DIR: str = "uploads"
     CLOUDINARY_URL: str | None = None
 
-    # Email
+    # Email — SMTP (Gmail). Sin SMTP_PASSWORD el sistema solo loguea (no envía).
+    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_EMAIL: str = "notificaciones.bianchi@gmail.com"
+    SMTP_PASSWORD: str | None = None
+    EMAIL_FROM: str = "Bianchi Detailing <notificaciones.bianchi@gmail.com>"
+    # Legacy (Resend) — ya no se usa, se conserva por compatibilidad de .env
     RESEND_API_KEY: str | None = None
-    EMAIL_FROM: str = "no-responder@tutaller.com"
 
     # Google Places (para mostrar reseñas automáticamente)
     GOOGLE_PLACES_API_KEY: str | None = None

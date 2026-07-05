@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block body %}
+  <p style="color:#0F172A;font-size:16px;margin:0;">Hola <strong>{{ cliente }}</strong>,</p>
+  <h1 style="color:#0F172A;font-size:22px;font-weight:800;margin:12px 0 8px;letter-spacing:-0.02em;">{{ titulo }}</h1>
+  <p style="color:#475569;font-size:15px;line-height:1.65;margin:0 0 22px;">{{ descripcion }}</p>
+
+  <!-- Datos del expediente -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;margin:0 0 24px;">
+    <tr><td style="padding:14px 20px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+        <tr><td style="padding:6px 0;color:#94A3B8;">Vehículo</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ vehiculo }}</td></tr>
+        <tr><td style="padding:6px 0;color:#94A3B8;">Patente</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ patente }}</td></tr>
+        <tr><td style="padding:6px 0;color:#94A3B8;">Estado actual</td><td style="padding:6px 0;text-align:right;color:#2563EB;font-weight:700;">{{ estado }}</td></tr>
+        <tr><td style="padding:6px 0;color:#94A3B8;">Expediente</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ numero }}</td></tr>
+        <tr><td style="padding:6px 0;color:#94A3B8;">Fecha y hora</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ fecha_hora }}</td></tr>
+      </table>
+    </td></tr>
+  </table>
+
+  <!-- CTA -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+    <a href="{{ url }}" style="display:inline-block;background:#2563EB;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 34px;border-radius:10px;">{{ cta_texto }}</a>
+  </td></tr></table>
+{% endblock %}

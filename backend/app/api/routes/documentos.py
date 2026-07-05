@@ -10,7 +10,8 @@ from app.models.expediente import Expediente
 from app.models.usuario import RolUsuario, Usuario
 from app.schemas.documento import DocumentoOut, DocumentoUpdate
 from app.services.storage import guardar_documento
-from app.services.events import EventBus
+from app.services import notifications
+from app.models.documento import LABELS_TIPO
 
 router = APIRouter(prefix="/api/expedientes/{expediente_id}/documentos", tags=["documentos"])
 
@@ -58,7 +59,8 @@ def subir_documento(
     doc = db.query(Documento).options(_jl(Documento.expediente), _jl(Documento.usuario)).filter(Documento.id == doc.id).first()
     if visible_cliente:
         exp_obj = db.get(Expediente, expediente_id)
-        EventBus.emit("nuevo_documento", expediente=exp_obj, actor=actual, extra={"nombre_documento": nombre, "tipo": tipo})
+        tipo_label = LABELS_TIPO.get(tipo, "Documento")
+        notifications.notificar(exp_obj, notifications.nuevo_documento(nombre, tipo_label))
     return doc
 
 @router.patch("/{doc_id}", response_model=DocumentoOut)
