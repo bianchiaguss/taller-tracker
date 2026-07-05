@@ -102,20 +102,20 @@ export default function AdminLayout() {
         <SidebarContent usuario={usuario} onLogout={handleLogout} />
       </aside>
 
-      {/* Sidebar mobile — hijos keyeados directos (AnimatePresence trackea por key) */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div key="backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      {/* Sidebar mobile — render condicional: al cerrar se desmonta al instante,
+          sin depender de una animación de salida que en móvil puede no completar
+          y dejar el overlay (opacity:0) interceptando todos los toques. */}
+      {mobileOpen && (
+        <>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             onClick={() => setMobileOpen(false)} className="lg:hidden fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm" />
-        )}
-        {mobileOpen && (
-          <motion.aside key="drawer" initial={{ x: -288 }} animate={{ x: 0 }} exit={{ x: -288 }}
+          <motion.aside initial={{ x: -288 }} animate={{ x: 0 }}
             transition={{ type: 'spring', stiffness: 360, damping: 36 }}
             className="lg:hidden fixed inset-y-0 left-0 z-50 w-64 bg-sidebar flex flex-col">
             <SidebarContent usuario={usuario} onLogout={handleLogout} onNavigate={() => setMobileOpen(false)} />
           </motion.aside>
-        )}
-      </AnimatePresence>
+        </>
+      )}
 
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
