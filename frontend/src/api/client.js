@@ -11,7 +11,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
+    // El 401 al intentar login/registro es "credenciales incorrectas":
+    // lo maneja la propia pantalla. Solo redirigimos si vence una sesión activa.
+    const url = err.config?.url || ''
+    const esIntentoAuth = url.includes('/auth/login') || url.includes('/auth/registro')
+    if (err.response?.status === 401 && !esIntentoAuth) {
       localStorage.removeItem('token')
       localStorage.removeItem('usuario')
       window.location.href = '/login'
