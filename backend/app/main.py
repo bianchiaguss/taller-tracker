@@ -1,3 +1,5 @@
+import logging
+import sys
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -8,6 +10,15 @@ from fastapi.staticfiles import StaticFiles
 from app.api.routes import auth, clientes, config, documentos, estados, expedientes, galeria, imagenes, novedades, opiniones, resenas, solicitudes, usuarios, vehiculos
 from app.api.routes.documentos import router_global as documentos_global_router
 from app.core.config import settings
+
+# Logs de notificaciones visibles en producción (Render no muestra INFO por defecto)
+_log_handler = logging.StreamHandler(sys.stdout)
+_log_handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s: %(message)s"))
+for _name in ("email", "notifications", "whatsapp"):
+    _lg = logging.getLogger(_name)
+    _lg.setLevel(logging.INFO)
+    _lg.addHandler(_log_handler)
+    _lg.propagate = False
 
 app = FastAPI(
     title="Taller Tracker API",
