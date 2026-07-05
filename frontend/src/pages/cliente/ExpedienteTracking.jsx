@@ -51,7 +51,7 @@ function getRecomendacion(estado, todosEstados) {
   if (n.includes('armado')) return { icono: '🔧', titulo: 'Proceso de armado', mensaje: 'Recolocamos todas las piezas y ajustamos cada detalle.' }
   if (n.includes('pulido') || n.includes('detail')) return { icono: '✨', titulo: 'Pulido y terminación', mensaje: 'Perfeccionamos el acabado final para dejar tu auto impecable.' }
   if (n.includes('control') || n.includes('calidad')) return { icono: '🏁', titulo: 'Control de calidad', mensaje: 'Inspección final del trabajo antes de la entrega.' }
-  if (n.includes('listo') || n.includes('entrega')) return { icono: '✅', titulo: 'Listo para retirar', mensaje: 'El trabajo terminó. Podés coordinar la entrega.' }
+  if (n.includes('listo') || n.includes('entrega')) return { icono: '✅', titulo: '¡Trabajo finalizado!', mensaje: 'El trabajo fue finalizado. Tu vehículo está listo para que lo vengas a retirar.' }
   if (progreso < 35) return { icono: '📌', titulo: 'Proceso iniciado', mensaje: 'La reparación está en marcha.' }
   if (progreso < 70) return { icono: '⚙️', titulo: 'Reparación en proceso', mensaje: 'El trabajo avanza correctamente.' }
   return { icono: '🏁', titulo: 'Etapas finales', mensaje: 'Tu vehículo está a punto de estar listo.' }
@@ -151,7 +151,7 @@ function accionEtapa(estado) {
   if (n.includes('armado')) return 'Comenzó el armado y montaje de las piezas.'
   if (n.includes('pulido') || n.includes('detail')) return 'Se realizó el pulido y la terminación final.'
   if (n.includes('control') || n.includes('calidad')) return 'Se inició el control de calidad previo a la entrega.'
-  if (n.includes('listo') || n.includes('entrega')) return 'El vehículo quedó listo para la entrega.'
+  if (n.includes('listo') || n.includes('entrega')) return 'El trabajo fue finalizado. El vehículo está listo para retirar.'
   return `Comenzó la etapa de ${estado.nombre}.`
 }
 
