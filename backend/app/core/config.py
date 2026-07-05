@@ -22,13 +22,17 @@ class Settings(BaseSettings):
     UPLOADS_DIR: str = "uploads"
     CLOUDINARY_URL: str | None = None
 
-    # Email — SMTP (Gmail). Sin SMTP_PASSWORD el sistema solo loguea (no envía).
+    # Email — Brevo API HTTP. Sin BREVO_API_KEY el sistema solo loguea (no envía).
+    # (Render bloquea SMTP saliente en el plan free; por eso se usa API HTTP.)
+    BREVO_API_KEY: str | None = None
+    EMAIL_FROM_NAME: str = "Bianchi Detailing"
+    EMAIL_FROM_EMAIL: str = "notificaciones.bianchi@gmail.com"
+    # Legacy (SMTP / Resend) — se conservan por compatibilidad de .env
     SMTP_SERVER: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
     SMTP_EMAIL: str = "notificaciones.bianchi@gmail.com"
     SMTP_PASSWORD: str | None = None
     EMAIL_FROM: str = "Bianchi Detailing <notificaciones.bianchi@gmail.com>"
-    # Legacy (Resend) — ya no se usa, se conserva por compatibilidad de .env
     RESEND_API_KEY: str | None = None
 
     # Google Places (para mostrar reseñas automáticamente)

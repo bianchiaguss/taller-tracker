@@ -1,24 +1,26 @@
-"""Servicio único de envío de correos (Gmail SMTP).
+"""Servicio único de envío de correos (Brevo API HTTP).
 
 - Toda la app envía emails a través de este módulo (no hay lógica de envío
   repetida en los controladores).
-- Sin SMTP_PASSWORD configurada, simula el envío (log) para no romper en dev.
+- Usa la API HTTP de Brevo (puerto 443): Render bloquea SMTP saliente en el
+  plan free, por eso no se usa smtplib.
+- Sin BREVO_API_KEY configurada, simula el envío (log) para no romper en dev.
 - Reintenta ante fallos y nunca propaga la excepción: un email caído no debe
   transformar una operación exitosa en un error.
-- Migrar a dominio propio = cambiar variables de entorno, sin tocar código.
+- Migrar de proveedor = cambiar este módulo + variables de entorno.
 """
 import logging
-import smtplib
-import ssl
 import time
-from email.message import EmailMessage
 from pathlib import Path
 
+import httpx
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from app.core.config import settings
 
 logger = logging.getLogger("email")
+
+_BREVO_URL = "https://api.brevo.com/v3/smtp/email"
 
 _TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates" / "email"
 _env = Environment(
@@ -32,25 +34,26 @@ def render(template: str, **contexto) -> str:
 
 
 def send_email(destinatario: str, asunto: str, html: str, reintentos: int = 3) -> bool:
-    """Envía un email HTML. Devuelve True si se envió. Nunca lanza."""
-    if not settings.SMTP_PASSWORD or not settings.SMTP_EMAIL:
+    """Envía un email HTML vía la API de Brevo. Devuelve True si se envió. Nunca lanza."""
+    if not settings.BREVO_API_KEY:
         logger.info("[EMAIL SIMULADO] Para: %s | Asunto: %s", destinatario, asunto)
         return False
 
-    msg = EmailMessage()
-    msg["Subject"] = asunto
-    msg["From"] = settings.EMAIL_FROM
-    msg["To"] = destinatario
-    msg.set_content("Este mensaje requiere un cliente de correo compatible con HTML.")
-    msg.add_alternative(html, subtype="html")
-
-    contexto_ssl = ssl.create_default_context()
+    payload = {
+        "sender": {"name": settings.EMAIL_FROM_NAME, "email": settings.EMAIL_FROM_EMAIL},
+        "to": [{"email": destinatario}],
+        "subject": asunto,
+        "htmlContent": html,
+    }
+    headers = {
+        "api-key": settings.BREVO_API_KEY,
+        "accept": "application/json",
+        "content-type": "application/json",
+    }
     for intento in range(1, reintentos + 1):
         try:
-            with smtplib.SMTP(settings.SMTP_SERVER, settings.SMTP_PORT, timeout=15) as servidor:
-                servidor.starttls(context=contexto_ssl)
-                servidor.login(settings.SMTP_EMAIL, settings.SMTP_PASSWORD)
-                servidor.send_message(msg)
+            resp = httpx.post(_BREVO_URL, json=payload, headers=headers, timeout=15)
+            resp.raise_for_status()
             logger.info("Email enviado a %s | %s", destinatario, asunto)
             return True
         except Exception:
