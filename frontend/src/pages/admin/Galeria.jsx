@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
 import { Plus, Trash2, X, Image as ImageIcon, AlertTriangle } from 'lucide-react'
-import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner } from '../../components/ui'
+import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner, Field, TextInput } from '../../components/ui'
 
 function ModalNuevoItem({ onClose, onCreated }) {
   const [form, setForm] = useState({ marca: '', modelo: '', anio: '', tipo_reparacion: '', descripcion: '', orden: '0' })
@@ -13,6 +13,7 @@ function ModalNuevoItem({ onClose, onCreated }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
 
   const handleFile = (setter, prevSetter) => e => {
     const file = e.target.files[0]
@@ -45,15 +46,27 @@ function ModalNuevoItem({ onClose, onCreated }) {
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="label">Marca</label><input className="input" required value={form.marca} onChange={set('marca')} /></div>
-            <div><label className="label">Modelo</label><input className="input" required value={form.modelo} onChange={set('modelo')} /></div>
+            <Field label="Marca" hint="Ej.: Ford, Volkswagen…">
+              <TextInput capitalize required value={form.marca} onChange={setV('marca')} placeholder="Ford" />
+            </Field>
+            <Field label="Modelo" hint="Ej.: Focus, Gol…">
+              <TextInput capitalize required value={form.modelo} onChange={setV('modelo')} placeholder="Focus" />
+            </Field>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="label">Año</label><input className="input" type="number" value={form.anio} onChange={set('anio')} /></div>
-            <div><label className="label">Orden</label><input className="input" type="number" value={form.orden} onChange={set('orden')} /></div>
+            <Field label="Año" hint="Ej.: 2020">
+              <input className="input" type="number" inputMode="numeric" min="1900" max="2100" value={form.anio} onChange={set('anio')} placeholder="2020" />
+            </Field>
+            <Field label="Orden" hint="Posición en la galería.">
+              <input className="input" type="number" inputMode="numeric" value={form.orden} onChange={set('orden')} placeholder="0" />
+            </Field>
           </div>
-          <div><label className="label">Tipo de reparación</label><input className="input" required value={form.tipo_reparacion} onChange={set('tipo_reparacion')} placeholder="Ej: Chapa y pintura completa" /></div>
-          <div><label className="label">Descripción (opcional)</label><textarea className="textarea" rows={2} value={form.descripcion} onChange={set('descripcion')} /></div>
+          <Field label="Tipo de reparación" hint="Trabajo realizado.">
+            <TextInput capitalize required value={form.tipo_reparacion} onChange={setV('tipo_reparacion')} placeholder="Ej.: Chapa y pintura completa" />
+          </Field>
+          <Field label="Descripción (opcional)" hint="Detalle del trabajo mostrado.">
+            <TextInput as="textarea" capitalize="sentence" className="textarea" rows={2} value={form.descripcion} onChange={setV('descripcion')} placeholder="Ej.: Restauración completa tras siniestro." />
+          </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <div>

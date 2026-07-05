@@ -1,3 +1,4 @@
+import { useRef, useLayoutEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
@@ -28,6 +29,72 @@ export function Page({ children, className = '' }) {
 export function Reveal({ children, className = '', as = 'div', ...props }) {
   const M = motion[as] || motion.div
   return <M variants={fadeUp} className={className} {...props}>{children}</M>
+}
+
+/* ── Formularios ─────────────────────────────────── */
+
+// Title Case sin bajar el resto → no cambia la longitud, el cursor no salta.
+export const titleCase = s => s.replace(/(^|[\s'/-])(\p{L})/gu, (_, b, c) => b + c.toUpperCase())
+// Primera letra de cada oración (para descripciones).
+export const sentenceCase = s => s.replace(/(^\s*\p{L})|([.!?]\s+\p{L})/gu, m => m.toUpperCase())
+
+// Campo uniforme: label + input + texto de ayuda sutil.
+export function Field({ label, hint, htmlFor, children, className = '' }) {
+  return (
+    <div className={className}>
+      {label && <label htmlFor={htmlFor} className="label">{label}</label>}
+      {children}
+      {hint && <p className="hint">{hint}</p>}
+    </div>
+  )
+}
+
+// Restaura el cursor tras reformatear el valor (evita saltos al final).
+function useCaret(ref) {
+  const caret = useRef(null)
+  useLayoutEffect(() => {
+    if (caret.current != null && ref.current && document.activeElement === ref.current) {
+      try { ref.current.setSelectionRange(caret.current, caret.current) } catch { /* noop */ }
+    }
+    caret.current = null
+  })
+  return caret
+}
+
+// Input/textarea controlado que preserva el cursor y opcionalmente capitaliza.
+// onChange recibe el string ya transformado (no el evento).
+export function TextInput({ value, onChange, capitalize, as = 'input', className = 'input', ...props }) {
+  const ref = useRef(null)
+  const caret = useCaret(ref)
+  const handle = e => {
+    caret.current = e.target.selectionStart
+    let v = e.target.value
+    if (capitalize === 'sentence') v = sentenceCase(v)
+    else if (capitalize) v = titleCase(v)
+    onChange(v)
+  }
+  const Tag = as
+  return <Tag ref={ref} className={className} value={value} onChange={handle} {...props} />
+}
+
+// Input de dinero: muestra 1.500.000 y entrega los dígitos crudos ("1500000").
+export function MoneyInput({ value, onChange, className = 'input', ...props }) {
+  const ref = useRef(null)
+  const caret = useCaret(ref)
+  const fmt = v => (v === '' || v == null ? '' : Number(v).toLocaleString('es-AR'))
+  const handle = e => {
+    const el = e.target
+    const digitsBefore = el.value.slice(0, el.selectionStart).replace(/\D/g, '').length
+    const raw = el.value.replace(/\D/g, '')
+    const formatted = fmt(raw)
+    let count = 0, pos = 0
+    for (; pos < formatted.length && count < digitsBefore; pos++) {
+      if (/\d/.test(formatted[pos])) count++
+    }
+    caret.current = pos
+    onChange(raw)
+  }
+  return <input ref={ref} inputMode="numeric" className={className} value={fmt(value)} onChange={handle} {...props} />
 }
 
 /* ── PageHeader ──────────────────────────────────── */

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/client'
 import { Wrench, Eye, EyeOff, AlertCircle, Clock, Camera, MapPin, BellRing, CheckCircle2 } from 'lucide-react'
-import { Spinner } from '../../components/ui'
+import { Spinner, Field, TextInput } from '../../components/ui'
 
 const BENEFICIOS = [
   { icon: Clock, t: 'Seguimiento en vivo', d: 'Mirá en qué etapa está tu vehículo en cada momento.' },
@@ -74,11 +74,12 @@ export default function Registro() {
   }, [])
 
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
 
   const handleSubmit = async e => {
     e.preventDefault()
     if (form.password !== form.confirmar) { setError('Las contraseñas no coinciden.'); return }
-    if (form.password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres.'); return }
+    if (form.password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres.'); return }
     setError(''); setLoading(true)
     try {
       const { data } = await api.post('/auth/registro', {
@@ -113,38 +114,32 @@ export default function Registro() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">Nombre</label>
-                <input className="input" required value={form.nombre} onChange={set('nombre')} placeholder="Juan" />
-              </div>
-              <div>
-                <label className="label">Apellido</label>
-                <input className="input" required value={form.apellido} onChange={set('apellido')} placeholder="Pérez" />
-              </div>
+              <Field label="Nombre" hint="Ingresá tu nombre.">
+                <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Juan" />
+              </Field>
+              <Field label="Apellido" hint="Ingresá tu apellido.">
+                <TextInput capitalize required value={form.apellido} onChange={setV('apellido')} placeholder="Pérez" />
+              </Field>
             </div>
-            <div>
-              <label className="label">Email</label>
-              <input className="input" type="email" required value={form.email} onChange={set('email')} placeholder="tu@email.com" />
-            </div>
-            <div>
-              <label className="label">Teléfono (opcional)</label>
-              <input className="input" type="tel" value={form.telefono} onChange={set('telefono')} placeholder="+54 11 ..." />
-            </div>
-            <div>
-              <label className="label">Contraseña</label>
+            <Field label="Email" hint="Ej.: nombre@correo.com">
+              <input className="input" type="email" required value={form.email} onChange={set('email')} placeholder="nombre@correo.com" />
+            </Field>
+            <Field label="Teléfono (opcional)" hint="Ej.: +54 11 1234-5678">
+              <input className="input" type="tel" value={form.telefono} onChange={set('telefono')} placeholder="+54 11 1234-5678" />
+            </Field>
+            <Field label="Contraseña" hint="Mínimo 8 caracteres.">
               <div className="relative">
-                <input className="input pr-10" type={showPwd ? 'text' : 'password'} required
-                  value={form.password} onChange={set('password')} placeholder="Mínimo 6 caracteres" />
+                <input className="input pr-10" type={showPwd ? 'text' : 'password'} required minLength={8}
+                  value={form.password} onChange={set('password')} placeholder="Mínimo 8 caracteres" />
                 <button type="button" onClick={() => setShowPwd(p => !p)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
                   {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-            </div>
-            <div>
-              <label className="label">Confirmar contraseña</label>
+            </Field>
+            <Field label="Confirmar contraseña" hint="Repetí la misma contraseña.">
               <input className="input" type="password" required value={form.confirmar} onChange={set('confirmar')} placeholder="Repetí la contraseña" />
-            </div>
+            </Field>
 
             {error && (
               <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}

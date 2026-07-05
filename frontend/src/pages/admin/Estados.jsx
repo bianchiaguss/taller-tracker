@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
 import { Plus, Pencil, Trash2, X, GripVertical, Check, Settings, AlertTriangle } from 'lucide-react'
-import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner } from '../../components/ui'
+import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner, Field, TextInput } from '../../components/ui'
 
 const COLORES_PRESET = [
   '#64748B','#0EA5E9','#8B5CF6','#F59E0B',
@@ -14,6 +14,7 @@ function ModalEstado({ inicial, onClose, onSaved }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const set = (k) => (e) => setForm(p => ({ ...p, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
 
   const handleSubmit = async (ev) => {
     ev.preventDefault(); setError(''); setLoading(true)
@@ -35,8 +36,12 @@ function ModalEstado({ inicial, onClose, onSaved }) {
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div><label className="label">Nombre</label><input className="input" required value={form.nombre} onChange={set('nombre')} placeholder="Ej: Pintura" /></div>
-          <div><label className="label">Orden</label><input className="input" type="number" min="1" required value={form.orden} onChange={set('orden')} /></div>
+          <Field label="Nombre" hint="Nombre de la etapa.">
+            <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Ej.: Pintura" />
+          </Field>
+          <Field label="Orden" hint="Posición en el flujo (1 = primera).">
+            <input className="input" type="number" inputMode="numeric" min="1" required value={form.orden} onChange={set('orden')} />
+          </Field>
           <div>
             <label className="label">Color</label>
             <div className="flex flex-wrap gap-2 mb-2">
@@ -51,7 +56,9 @@ function ModalEstado({ inicial, onClose, onSaved }) {
               <input className="input font-mono" value={form.color} onChange={set('color')} placeholder="#2563EB" />
             </div>
           </div>
-          <div><label className="label">Descripción (opcional)</label><input className="input" value={form.descripcion || ''} onChange={set('descripcion')} /></div>
+          <Field label="Descripción (opcional)" hint="Breve explicación de la etapa.">
+            <TextInput capitalize="sentence" value={form.descripcion || ''} onChange={setV('descripcion')} placeholder="Ej.: El vehículo está en cabina de pintura." />
+          </Field>
           <div className="flex items-center gap-2">
             <input type="checkbox" id="es_final" className="w-4 h-4 rounded" checked={form.es_estado_final} onChange={set('es_estado_final')} />
             <label htmlFor="es_final" className="text-sm text-slate-700">Es estado final (ej: Entregado)</label>

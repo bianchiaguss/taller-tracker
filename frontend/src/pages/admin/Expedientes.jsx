@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
 import { Plus, X, FileText, ChevronRight, Search, Trash2, ShieldCheck, AlertTriangle } from 'lucide-react'
-import { Page, PageHeader, Card, EstadoBadge, EmptyState, Loading, Modal, Spinner } from '../../components/ui'
+import { Page, PageHeader, Card, EstadoBadge, EmptyState, Loading, Modal, Spinner, Field, TextInput, MoneyInput } from '../../components/ui'
 
 function ModalNuevoExpediente({ onClose, onCreated }) {
   const [vehiculos, setVehiculos] = useState([])
@@ -15,6 +15,7 @@ function ModalNuevoExpediente({ onClose, onCreated }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
 
   useEffect(() => { api.get('/vehiculos').then(r => setVehiculos(r.data)) }, [])
 
@@ -42,28 +43,39 @@ function ModalNuevoExpediente({ onClose, onCreated }) {
         <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
       </div>
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
-        <div>
-          <label className="label">Vehículo</label>
+        <Field label="Vehículo" hint={vehiculos.length === 0 ? undefined : 'Elegí el vehículo del cliente.'}>
           <select className="select" required value={form.vehiculo_id} onChange={set('vehiculo_id')}>
             <option value="">Seleccionar vehículo…</option>
             {vehiculos.map(v => <option key={v.id} value={v.id}>{v.marca} {v.modelo} — {v.patente}</option>)}
           </select>
           {vehiculos.length === 0 && <p className="text-xs text-amber-600 mt-1">No hay vehículos. Creá un cliente con vehículo primero.</p>}
-        </div>
+        </Field>
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="label">Fecha de ingreso</label><input className="input" type="date" required value={form.fecha_ingreso} onChange={set('fecha_ingreso')} /></div>
-          <div><label className="label">Entrega estimada</label><input className="input" type="date" value={form.fecha_estimada_entrega} onChange={set('fecha_estimada_entrega')} /></div>
+          <Field label="Fecha de ingreso" hint="Día en que ingresó el vehículo.">
+            <input className="input" type="date" required value={form.fecha_ingreso} onChange={set('fecha_ingreso')} />
+          </Field>
+          <Field label="Entrega estimada" hint="Opcional. Podés cambiarla luego.">
+            <input className="input" type="date" value={form.fecha_estimada_entrega} onChange={set('fecha_estimada_entrega')} />
+          </Field>
         </div>
-        <div><label className="label">Descripción inicial</label><textarea className="textarea" rows={3} value={form.descripcion_inicial} onChange={set('descripcion_inicial')} placeholder="Descripción del trabajo…" /></div>
-        <div><label className="label">Presupuesto estimado ($)</label><input className="input" type="number" min="0" step="0.01" value={form.presupuesto_estimado} onChange={set('presupuesto_estimado')} placeholder="0.00" /></div>
+        <Field label="Descripción inicial" hint="Detallá el trabajo a realizar.">
+          <TextInput as="textarea" capitalize="sentence" className="textarea" rows={3} value={form.descripcion_inicial} onChange={setV('descripcion_inicial')} placeholder="Ej.: Reparación de puerta trasera derecha y pintura del lateral." />
+        </Field>
+        <Field label="Presupuesto estimado ($)" hint="Solo el monto; se formatea automáticamente.">
+          <MoneyInput value={form.presupuesto_estimado} onChange={setV('presupuesto_estimado')} placeholder="0" />
+        </Field>
         <label className="flex items-center gap-2.5 cursor-pointer">
           <input type="checkbox" className="w-4 h-4 rounded accent-primary" checked={form.es_siniestro} onChange={set('es_siniestro')} />
           <span className="text-sm font-medium text-slate-700">Es siniestro / seguro</span>
         </label>
         {form.es_siniestro && (
           <div className="grid grid-cols-2 gap-3 pl-6 border-l-2 border-primary/20">
-            <div><label className="label">Aseguradora</label><input className="input" value={form.aseguradora} onChange={set('aseguradora')} /></div>
-            <div><label className="label">N° siniestro</label><input className="input font-mono" value={form.numero_siniestro} onChange={set('numero_siniestro')} /></div>
+            <Field label="Aseguradora" hint="Nombre de la compañía.">
+              <TextInput capitalize value={form.aseguradora} onChange={setV('aseguradora')} placeholder="Ej.: La Caja" />
+            </Field>
+            <Field label="N° siniestro" hint="Número asignado por la aseguradora.">
+              <input className="input font-mono" value={form.numero_siniestro} onChange={set('numero_siniestro')} placeholder="Ej.: 100-2024-0001" />
+            </Field>
           </div>
         )}
         {error && <p className="error-text"><AlertTriangle size={13} /> {error}</p>}

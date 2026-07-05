@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
 import { Plus, X, Car, Pencil, Trash2, Users, AlertTriangle } from 'lucide-react'
-import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner } from '../../components/ui'
+import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner, Field, TextInput } from '../../components/ui'
 
 function ModalHeader({ title, onClose }) {
   return (
@@ -28,6 +28,7 @@ function ModalCliente({ inicial, onClose, onSaved }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
 
   const handleSubmit = async ev => {
     ev.preventDefault(); setError(''); setLoading(true)
@@ -51,18 +52,32 @@ function ModalCliente({ inicial, onClose, onSaved }) {
       <ModalHeader title={editando ? 'Editar cliente' : 'Nuevo cliente'} onClose={onClose} />
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="label">Nombre</label><input className="input" required value={form.nombre} onChange={set('nombre')} /></div>
-          <div><label className="label">Apellido</label><input className="input" required value={form.apellido} onChange={set('apellido')} /></div>
+          <Field label="Nombre" hint="Ingresá el nombre del cliente.">
+            <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Ej.: Juan" />
+          </Field>
+          <Field label="Apellido" hint="Ingresá el apellido.">
+            <TextInput capitalize required value={form.apellido} onChange={setV('apellido')} placeholder="Ej.: Pérez" />
+          </Field>
         </div>
-        <div><label className="label">Email</label><input className="input" type="email" required value={form.email} onChange={set('email')} /></div>
+        <Field label="Email" hint="Ej.: nombre@correo.com">
+          <input className="input" type="email" required value={form.email} onChange={set('email')} placeholder="nombre@correo.com" />
+        </Field>
         {!editando && (
-          <div><label className="label">Contraseña inicial</label><input className="input" type="password" required minLength={6} value={form.password} onChange={set('password')} /></div>
+          <Field label="Contraseña inicial" hint="Mínimo 8 caracteres.">
+            <input className="input" type="password" required minLength={8} value={form.password} onChange={set('password')} placeholder="Mínimo 8 caracteres" />
+          </Field>
         )}
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="label">Teléfono</label><input className="input" value={form.telefono} onChange={set('telefono')} /></div>
-          <div><label className="label">DNI / CUIT</label><input className="input" value={form.dni_cuit} onChange={set('dni_cuit')} /></div>
+          <Field label="Teléfono" hint="Ej.: +54 11 1234-5678">
+            <input className="input" type="tel" value={form.telefono} onChange={set('telefono')} placeholder="+54 11 1234-5678" />
+          </Field>
+          <Field label="DNI / CUIT" hint="Solo números, sin puntos ni guiones.">
+            <input className="input" inputMode="numeric" value={form.dni_cuit} onChange={e => setForm(p => ({ ...p, dni_cuit: e.target.value.replace(/\D/g, '') }))} placeholder="20304050607" />
+          </Field>
         </div>
-        <div><label className="label">Dirección</label><input className="input" value={form.direccion} onChange={set('direccion')} /></div>
+        <Field label="Dirección" hint="Calle, número, localidad.">
+          <TextInput capitalize value={form.direccion} onChange={setV('direccion')} placeholder="Ej.: Av. Siempreviva 742, Springfield" />
+        </Field>
         {error && <p className="error-text"><AlertTriangle size={13} /> {error}</p>}
         <div className="flex gap-2 pt-2">
           <button type="button" onClick={onClose} className="btn-secondary flex-1">Cancelar</button>
@@ -80,6 +95,8 @@ function ModalVehiculo({ clienteId, onClose, onCreated }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
+  const setUpper = k => e => setForm(p => ({ ...p, [k]: e.target.value.toUpperCase() }))
   const handleSubmit = async ev => {
     ev.preventDefault(); setError(''); setLoading(true)
     try {
@@ -92,16 +109,28 @@ function ModalVehiculo({ clienteId, onClose, onCreated }) {
       <ModalHeader title="Agregar vehículo" onClose={onClose} />
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="label">Marca</label><input className="input" required value={form.marca} onChange={set('marca')} placeholder="Ford" /></div>
-          <div><label className="label">Modelo</label><input className="input" required value={form.modelo} onChange={set('modelo')} placeholder="Focus" /></div>
+          <Field label="Marca" hint="Ej.: Ford, Volkswagen…">
+            <TextInput capitalize required value={form.marca} onChange={setV('marca')} placeholder="Ford" />
+          </Field>
+          <Field label="Modelo" hint="Ej.: Focus, Gol…">
+            <TextInput capitalize required value={form.modelo} onChange={setV('modelo')} placeholder="Focus" />
+          </Field>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="label">Año</label><input className="input" type="number" value={form.anio} onChange={set('anio')} placeholder="2020" /></div>
-          <div><label className="label">Patente</label><input className="input font-mono" required value={form.patente} onChange={set('patente')} placeholder="AB123CD" /></div>
+          <Field label="Año" hint="Ej.: 2020">
+            <input className="input" type="number" inputMode="numeric" min="1900" max="2100" value={form.anio} onChange={set('anio')} placeholder="2020" />
+          </Field>
+          <Field label="Patente" hint="Formato AB123CD o ABC123.">
+            <input className="input font-mono uppercase" required value={form.patente} onChange={setUpper('patente')} placeholder="AB123CD" />
+          </Field>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="label">Color</label><input className="input" value={form.color} onChange={set('color')} /></div>
-          <div><label className="label">VIN</label><input className="input font-mono text-xs" value={form.vin} onChange={set('vin')} /></div>
+          <Field label="Color" hint="Ej.: Gris plata.">
+            <TextInput capitalize value={form.color} onChange={setV('color')} placeholder="Gris" />
+          </Field>
+          <Field label="VIN" hint="17 caracteres (opcional).">
+            <input className="input font-mono text-xs uppercase" maxLength={17} value={form.vin} onChange={setUpper('vin')} placeholder="8AFDR5FD..." />
+          </Field>
         </div>
         {error && <p className="error-text"><AlertTriangle size={13} /> {error}</p>}
         <div className="flex gap-2 pt-2">

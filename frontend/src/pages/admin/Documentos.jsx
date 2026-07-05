@@ -6,7 +6,7 @@ import {
   Upload, Download, Trash2, Eye, EyeOff, X,
   FileText, Search, ExternalLink, FolderOpen, AlertTriangle
 } from 'lucide-react'
-import { Page, PageHeader, Card, EmptyState, Loading, Modal, Spinner } from '../../components/ui'
+import { Page, PageHeader, Card, EmptyState, Loading, Modal, Spinner, Field, TextInput } from '../../components/ui'
 
 const LABELS_TIPO = {
   presupuesto: 'Presupuesto', factura: 'Factura', comprobante_pago: 'Comprobante de pago',
@@ -66,19 +66,17 @@ function ModalSubir({ expedientes, onClose, onSubido }) {
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="label">Expediente</label>
+          <Field label="Expediente" hint="Elegí a qué expediente pertenece.">
             <select className="select" required value={expId} onChange={e => setExpId(e.target.value)}>
               <option value="">Seleccionar expediente…</option>
               {expedientes.map(e => (
                 <option key={e.id} value={e.id}>{e.numero_expediente} — {e.vehiculo?.patente}</option>
               ))}
             </select>
-          </div>
-          <div>
-            <label className="label">Nombre del documento</label>
-            <input className="input" required value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Presupuesto N°001" />
-          </div>
+          </Field>
+          <Field label="Nombre del documento" hint="Nombre claro para identificarlo.">
+            <TextInput capitalize required value={nombre} onChange={setNombre} placeholder="Ej.: Presupuesto N°001" />
+          </Field>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label">Tipo</label>

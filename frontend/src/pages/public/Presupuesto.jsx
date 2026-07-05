@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import api from '../../api/client'
 import { Navbar, Footer, WhatsAppButton } from '../../components/PublicLayout'
 import { CheckCircle, Upload, ArrowLeft, X } from 'lucide-react'
-import { Spinner } from '../../components/ui'
+import { Spinner, Field, TextInput } from '../../components/ui'
 
 export default function Presupuesto() {
   const [config, setConfig] = useState({})
@@ -22,6 +22,8 @@ export default function Presupuesto() {
   }, [])
 
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }))
+  const setV = k => v => setForm(p => ({ ...p, [k]: v }))
+  const setUpper = k => e => setForm(p => ({ ...p, [k]: e.target.value.toUpperCase() }))
 
   const handleFiles = e => {
     const nuevos = Array.from(e.target.files).slice(0, 5)
@@ -89,32 +91,49 @@ export default function Presupuesto() {
             <div>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tus datos</p>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="label">Nombre</label><input className="input" required value={form.nombre} onChange={set('nombre')} /></div>
-                <div><label className="label">Apellido</label><input className="input" required value={form.apellido} onChange={set('apellido')} /></div>
+                <Field label="Nombre" hint="Ingresá tu nombre.">
+                  <TextInput capitalize required value={form.nombre} onChange={setV('nombre')} placeholder="Juan" />
+                </Field>
+                <Field label="Apellido" hint="Ingresá tu apellido.">
+                  <TextInput capitalize required value={form.apellido} onChange={setV('apellido')} placeholder="Pérez" />
+                </Field>
               </div>
               <div className="grid grid-cols-2 gap-3 mt-3">
-                <div><label className="label">Email</label><input className="input" type="email" required value={form.email} onChange={set('email')} /></div>
-                <div><label className="label">Teléfono</label><input className="input" type="tel" required value={form.telefono} onChange={set('telefono')} /></div>
+                <Field label="Email" hint="Ej.: nombre@correo.com">
+                  <input className="input" type="email" required value={form.email} onChange={set('email')} placeholder="nombre@correo.com" />
+                </Field>
+                <Field label="Teléfono" hint="Ej.: +54 11 1234-5678">
+                  <input className="input" type="tel" required value={form.telefono} onChange={set('telefono')} placeholder="+54 11 1234-5678" />
+                </Field>
               </div>
             </div>
 
             <div className="border-t border-slate-100 pt-5">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Datos del vehículo</p>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="label">Marca</label><input className="input" required value={form.marca} onChange={set('marca')} placeholder="Ford" /></div>
-                <div><label className="label">Modelo</label><input className="input" required value={form.modelo} onChange={set('modelo')} placeholder="Focus" /></div>
+                <Field label="Marca" hint="Ej.: Ford, Volkswagen…">
+                  <TextInput capitalize required value={form.marca} onChange={setV('marca')} placeholder="Ford" />
+                </Field>
+                <Field label="Modelo" hint="Ej.: Focus, Gol…">
+                  <TextInput capitalize required value={form.modelo} onChange={setV('modelo')} placeholder="Focus" />
+                </Field>
               </div>
               <div className="grid grid-cols-2 gap-3 mt-3">
-                <div><label className="label">Año</label><input className="input" type="number" value={form.anio} onChange={set('anio')} placeholder="2020" /></div>
-                <div><label className="label">Patente</label><input className="input font-mono" value={form.patente} onChange={set('patente')} placeholder="AB123CD" /></div>
+                <Field label="Año" hint="Ej.: 2020">
+                  <input className="input" type="number" inputMode="numeric" min="1900" max="2100" value={form.anio} onChange={set('anio')} placeholder="2020" />
+                </Field>
+                <Field label="Patente" hint="Formato AB123CD o ABC123.">
+                  <input className="input font-mono uppercase" value={form.patente} onChange={setUpper('patente')} placeholder="AB123CD" />
+                </Field>
               </div>
             </div>
 
             <div className="border-t border-slate-100 pt-5">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Descripción del daño</p>
-              <textarea className="textarea" rows={4} required
-                value={form.descripcion_danio} onChange={set('descripcion_danio')}
+              <TextInput as="textarea" capitalize="sentence" className="textarea" rows={4} required
+                value={form.descripcion_danio} onChange={setV('descripcion_danio')}
                 placeholder="Describí el daño o reparación que necesitás. Por ejemplo: golpe en puerta trasera derecha, rayón profundo en capó, etc." />
+              <p className="hint">Cuanto más detalle, más preciso el presupuesto.</p>
             </div>
 
             <div className="border-t border-slate-100 pt-5">
