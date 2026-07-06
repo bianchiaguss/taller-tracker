@@ -353,8 +353,8 @@ function GoogleIcon({ size = 18 }) {
 function GraciasResena({ mapsUrl }) {
   return (
     <Reveal className="card rounded-2xl overflow-hidden">
-      <div className="bg-gradient-to-br from-amber-50 via-white to-white p-6 sm:p-8 text-center">
-        <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-100 flex items-center justify-center mb-4">
+      <div className="bg-gradient-to-br from-amber-50 via-white to-white dark:from-amber-500/10 dark:via-transparent dark:to-transparent p-6 sm:p-8 text-center">
+        <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center mb-4">
           <Star size={30} className="text-amber-400 fill-amber-400" />
         </div>
         <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">¡Gracias por confiar en nosotros!</h3>
