@@ -214,7 +214,7 @@ function HistorialReparacion({ historial, novedades }) {
         {open && (
           <motion.div key="hist" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }} className="overflow-hidden">
-            <div className="pt-5">
+            <div className="pt-5 pl-1.5">
               {grupos.map((g, gi) => (
                 <div key={gi} className={gi > 0 ? 'mt-5' : ''}>
                   <div className="flex items-center gap-3 mb-3">
@@ -222,7 +222,7 @@ function HistorialReparacion({ historial, novedades }) {
                     <span className="h-px flex-1 bg-slate-100" />
                   </div>
                   <ul className="relative space-y-3">
-                    <span className="absolute left-[15px] top-1 bottom-1 w-px bg-slate-200" />
+                    <span className="absolute left-[15px] top-1 bottom-1 w-px bg-slate-200 dark:bg-white/10" />
                     {g.items.map(ev => {
                       const isLatest = ev.id === latestId
                       const isEtapa = ev.tipo === 'etapa'
@@ -232,7 +232,7 @@ function HistorialReparacion({ historial, novedades }) {
                         <li key={ev.id} className="relative flex gap-3">
                           <div className="relative z-10 flex-shrink-0 mt-0.5">
                             {isLatest && <span className="absolute inset-0 rounded-full animate-ping opacity-30" style={{ backgroundColor: isEtapa ? ev.estado.color : '#2563EB' }} />}
-                            <div className={`relative w-8 h-8 rounded-full flex items-center justify-center ring-4 ring-white ${isEtapa ? '' : meta.bg}`}
+                            <div className={`relative w-8 h-8 rounded-full flex items-center justify-center ring-4 ring-[color:var(--c-card)] ${isEtapa ? '' : meta.bg}`}
                               style={isEtapa ? { backgroundColor: ev.estado.color + '1F' } : undefined}>
                               {isEtapa ? <Icon size={14} style={{ color: ev.estado.color }} /> : <Icon size={13} className={meta.fg} />}
                             </div>
