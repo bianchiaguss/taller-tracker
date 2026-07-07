@@ -1,7 +1,7 @@
 """Modelo de Vehiculo."""
 import uuid
 
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -22,6 +22,7 @@ class Vehiculo(Base, UUIDMixin, TimestampMixin):
     color: Mapped[str | None] = mapped_column(String(50), nullable=True)
     vin: Mapped[str | None] = mapped_column(String(50), nullable=True)
     kilometraje: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    es_principal: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="0")
 
     cliente: Mapped["Cliente"] = relationship(back_populates="vehiculos")
     expedientes: Mapped[list["Expediente"]] = relationship(

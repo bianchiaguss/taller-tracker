@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
 import { Plus, X, FileText, ChevronRight, Search, Trash2, ShieldCheck, AlertTriangle } from 'lucide-react'
@@ -92,7 +92,8 @@ export default function Expedientes() {
   const [expedientes, setExpedientes] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
-  const [busqueda, setBusqueda] = useState('')
+  const [sp] = useSearchParams()
+  const [busqueda, setBusqueda] = useState(sp.get('q') || '')
 
   useEffect(() => {
     api.get('/expedientes').then(r => setExpedientes(r.data)).finally(() => setLoading(false))

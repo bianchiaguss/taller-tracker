@@ -38,6 +38,10 @@ def crear_vehiculo(
     if not db.get(Cliente, data.cliente_id):
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     vehiculo = Vehiculo(**data.model_dump())
+    # El primer vehiculo del cliente queda como principal automaticamente.
+    ya_tiene = db.query(Vehiculo).filter(Vehiculo.cliente_id == data.cliente_id).count()
+    if ya_tiene == 0:
+        vehiculo.es_principal = True
     db.add(vehiculo)
     db.commit()
     db.refresh(vehiculo)
@@ -70,3 +74,49 @@ def actualizar_vehiculo(
     db.commit()
     db.refresh(vehiculo)
     return vehiculo
+
+
+@router.post("/{vehiculo_id}/principal", response_model=VehiculoOut)
+def marcar_principal(
+    vehiculo_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(require_admin),
+):
+    """Marca este vehiculo como principal y desmarca los demas del mismo cliente."""
+    vehiculo = db.get(Vehiculo, vehiculo_id)
+    if not vehiculo:
+        raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
+    db.query(Vehiculo).filter(Vehiculo.cliente_id == vehiculo.cliente_id).update(
+        {Vehiculo.es_principal: False}
+    )
+    vehiculo.es_principal = True
+    db.commit()
+    db.refresh(vehiculo)
+    return vehiculo
+
+
+@router.delete("/{vehiculo_id}", status_code=status.HTTP_204_NO_CONTENT)
+def borrar_vehiculo(
+    vehiculo_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(require_admin),
+):
+    """Elimina el vehiculo y (por cascade) sus expedientes asociados."""
+    vehiculo = db.get(Vehiculo, vehiculo_id)
+    if not vehiculo:
+        raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
+    era_principal = vehiculo.es_principal
+    cliente_id = vehiculo.cliente_id
+    db.delete(vehiculo)
+    db.flush()
+    # Si borramos el principal y quedan otros, promover al mas antiguo.
+    if era_principal:
+        sig = (
+            db.query(Vehiculo)
+            .filter(Vehiculo.cliente_id == cliente_id)
+            .order_by(Vehiculo.created_at.asc())
+            .first()
+        )
+        if sig:
+            sig.es_principal = True
+    db.commit()

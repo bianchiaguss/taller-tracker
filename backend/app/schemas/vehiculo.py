@@ -33,4 +33,5 @@ class VehiculoOut(VehiculoBase):
 
     id: uuid.UUID
     cliente_id: uuid.UUID
+    es_principal: bool = False
     created_at: datetime

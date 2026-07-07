@@ -55,12 +55,31 @@ app.include_router(config.router)
 app.include_router(resenas.router)
 
 
+def _migrar_columnas(engine):
+    """Migracion ligera para SQLite: agrega columnas nuevas a tablas ya
+    existentes (create_all no altera tablas). Idempotente."""
+    from sqlalchemy import text
+    if engine.dialect.name != "sqlite":
+        return
+    with engine.begin() as conn:
+        cols = [r[1] for r in conn.execute(text("PRAGMA table_info(vehiculos)")).fetchall()]
+        if "es_principal" not in cols:
+            conn.execute(text("ALTER TABLE vehiculos ADD COLUMN es_principal BOOLEAN NOT NULL DEFAULT 0"))
+            # Backfill: el vehiculo mas antiguo de cada cliente queda como principal.
+            conn.execute(text(
+                "UPDATE vehiculos SET es_principal = 1 WHERE id IN ("
+                " SELECT v1.id FROM vehiculos v1 WHERE v1.created_at = ("
+                "  SELECT MIN(v2.created_at) FROM vehiculos v2 WHERE v2.cliente_id = v1.cliente_id))"
+            ))
+
+
 @app.on_event("startup")
 def inicializar_db():
     """Crea las tablas y carga los datos base (admin + estados + config)
     si la base está vacía. Idempotente: no pisa datos existentes."""
     from app.db.base import Base, engine
     Base.metadata.create_all(bind=engine)
+    _migrar_columnas(engine)
     from seed import seed
     seed()
 
