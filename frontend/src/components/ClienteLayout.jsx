@@ -23,7 +23,7 @@ export default function ClienteLayout() {
       {/* Header */}
       <header className="glass border-b border-slate-200/70 sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/dashboard" className="flex items-center gap-2.5 group">
+          <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center shadow-soft group-hover:scale-105 transition-transform">
               <Wrench size={15} className="text-white" />
             </div>

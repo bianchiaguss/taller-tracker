@@ -26,9 +26,9 @@ const nav = [
 function SidebarContent({ usuario, onLogout, onNavigate }) {
   return (
     <div className="flex flex-col h-full">
-      {/* Logo → Dashboard */}
+      {/* Logo → Inicio del sitio (sin cerrar sesión) */}
       <div className="px-3 py-4">
-        <Link to="/admin" onClick={onNavigate} title="Ir al Dashboard"
+        <Link to="/" onClick={onNavigate} title="Ir al inicio"
           className="group flex items-center gap-2.5 px-2 py-2 rounded-xl transition-colors hover:bg-white/5">
           <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-glow transition-transform group-hover:scale-105">
             <Wrench size={17} className="text-white" />
@@ -129,7 +129,7 @@ export default function AdminLayout() {
         {/* Topbar mobile */}
         <header className="lg:hidden flex items-center justify-between px-4 h-14 bg-white border-b border-slate-200 flex-shrink-0">
           <button onClick={() => setMobileOpen(true)} className="p-2 -ml-2 text-slate-600"><Menu size={22} /></button>
-          <Link to="/admin" className="font-bold text-slate-900 text-sm">TallerTrack</Link>
+          <Link to="/" className="font-bold text-slate-900 text-sm">TallerTrack</Link>
           <ThemeToggle />
         </header>
 
