@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block body %}
+  <p style="color:#0F172A;font-size:16px;margin:0;">Hola <strong>{{ cliente }}</strong>,</p>
+  <h1 style="color:#0F172A;font-size:22px;font-weight:800;margin:12px 0 8px;letter-spacing:-0.02em;">Tu presupuesto ya tiene una respuesta</h1>
+  <p style="color:#475569;font-size:15px;line-height:1.65;margin:0 0 22px;">Analizamos la información que nos enviaste y ya tenemos una respuesta para tu solicitud.</p>
+
+  <!-- Respuesta del taller (destacada) -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EFF6FF;border:1px solid #BFDBFE;border-left:4px solid #2563EB;border-radius:12px;margin:0 0 24px;">
+    <tr><td style="padding:16px 20px;">
+      <div style="color:#2563EB;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Respuesta del taller</div>
+      <div style="color:#0F172A;font-size:15px;line-height:1.7;white-space:pre-line;">{{ respuesta }}</div>
+    </td></tr>
+  </table>
+
+  <!-- Datos del vehículo -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;margin:0 0 24px;">
+    <tr><td style="padding:14px 20px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+        <tr><td style="padding:6px 0;color:#94A3B8;">Marca</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ marca }}</td></tr>
+        <tr><td style="padding:6px 0;color:#94A3B8;">Modelo</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ modelo }}</td></tr>
+        {% if anio %}<tr><td style="padding:6px 0;color:#94A3B8;">Año</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ anio }}</td></tr>{% endif %}
+        {% if patente %}<tr><td style="padding:6px 0;color:#94A3B8;">Patente</td><td style="padding:6px 0;text-align:right;color:#0F172A;font-weight:600;">{{ patente }}</td></tr>{% endif %}
+      </table>
+    </td></tr>
+  </table>
+
+  <!-- CTA principal: WhatsApp -->
+  {% if whatsapp_url %}
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+    <a href="{{ whatsapp_url }}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 34px;border-radius:10px;">Contactar por WhatsApp</a>
+  </td></tr></table>
+  {% endif %}
+{% endblock %}

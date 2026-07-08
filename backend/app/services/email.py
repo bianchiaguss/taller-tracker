@@ -1,87 +1,68 @@
-"""Servicio de notificaciones por email.
+"""Correos de solicitudes de presupuesto.
 
-MVP: si no hay RESEND_API_KEY configurada, solo loguea el envio por
-consola (util para desarrollo, no rompe nada sin credenciales reales).
-Cuando se configure la API key, este modulo es el unico lugar que hay
-que tocar para que los emails empiecen a salir de verdad.
+Usan exactamente el mismo layout base (templates/email/base.html) que los
+correos del expediente: solo cambia el contenido. Así todo lo que sale de la
+plataforma se ve como un correo oficial de Bianchi Detailing.
 """
 import logging
+from urllib.parse import quote
 
-from app.core.config import settings
+from app.services import email_service
+from app.services.notifications import _taller
 
 logger = logging.getLogger("email")
 
 
-def _enviar(destinatario: str, asunto: str, cuerpo_html: str) -> None:
-    # Delega en el servicio único de correo (Gmail SMTP). Estas funciones
-    # (solicitudes / reseñas) usan HTML propio, por eso envían directo.
-    from app.services.email_service import send_email
-    send_email(destinatario, asunto, cuerpo_html)
+def _fecha(dt) -> str:
+    try:
+        return dt.strftime("%d/%m/%Y")
+    except Exception:
+        return "—"
 
 
-def notificar_cambio_estado(
-    email_destino: str, nombre_cliente: str, numero_expediente: str, nuevo_estado: str
-) -> None:
-    asunto = f"Tu vehiculo avanzo de etapa - {numero_expediente}"
-    cuerpo = f"""
-    <p>Hola {nombre_cliente},</p>
-    <p>Tu expediente <strong>{numero_expediente}</strong> avanzo a la etapa:
-    <strong>{nuevo_estado}</strong>.</p>
-    <p>Podes ver el detalle completo y las fotos ingresando a la plataforma.</p>
-    """
-    _enviar(email_destino, asunto, cuerpo)
+def _whatsapp_url(telefono, mensaje) -> str | None:
+    """Link wa.me hacia el taller, con mensaje pre-cargado. None si no hay teléfono."""
+    d = "".join(c for c in str(telefono or "") if c.isdigit())
+    if not d:
+        return None
+    if not d.startswith("54") and len(d) <= 10:
+        d = "54" + d
+    return f"https://wa.me/{d}?text={quote(mensaje)}"
 
 
-def notificar_nueva_novedad(
-    email_destino: str, nombre_cliente: str, numero_expediente: str, titulo_novedad: str
-) -> None:
-    asunto = f"Nueva novedad en tu expediente - {numero_expediente}"
-    cuerpo = f"""
-    <p>Hola {nombre_cliente},</p>
-    <p>Hay una nueva novedad en tu expediente <strong>{numero_expediente}</strong>:</p>
-    <p><strong>{titulo_novedad}</strong></p>
-    <p>Ingresa a la plataforma para ver el detalle completo.</p>
-    """
-    _enviar(email_destino, asunto, cuerpo)
+def _contexto(solicitud, titulo: str) -> dict:
+    return {
+        "titulo": titulo,
+        "cliente": solicitud.nombre,
+        "marca": solicitud.marca,
+        "modelo": solicitud.modelo,
+        "anio": solicitud.anio,
+        "patente": solicitud.patente,
+        "fecha": _fecha(solicitud.created_at),
+        "taller": _taller(),
+    }
 
 
-def notificar_nueva_solicitud(
-    email_cliente: str, nombre: str, marca: str, modelo: str
-) -> None:
-    asunto = f"Nueva solicitud de presupuesto recibida — {marca} {modelo}"
-    cuerpo = f"""
-    <p>Hola {nombre},</p>
-    <p>Recibimos tu solicitud de presupuesto para tu <strong>{marca} {modelo}</strong>.</p>
-    <p>Te contactaremos a la brevedad para coordinar la visita y evaluación.</p>
-    """
-    _enviar(email_cliente, asunto, cuerpo)
+def notificar_nueva_solicitud(solicitud) -> None:
+    ctx = _contexto(solicitud, "Solicitud de presupuesto recibida")
+    html = email_service.render("presupuesto_solicitud.html", **ctx)
+    email_service.send_email(
+        solicitud.email,
+        f"Solicitud de presupuesto recibida — {solicitud.marca} {solicitud.modelo}",
+        html,
+    )
 
 
-def notificar_solicitud_resena(
-    email_destino: str, nombre_cliente: str, numero_expediente: str,
-    vehiculo: str, token: str, frontend_url: str
-) -> None:
-    link = f"{frontend_url}/resena/{token}"
-    asunto = f"¿Cómo fue tu experiencia? — {numero_expediente}"
-    cuerpo = f"""
-    <p>Hola {nombre_cliente},</p>
-    <p>Tu <strong>{vehiculo}</strong> (expediente {numero_expediente}) ya fue entregado.</p>
-    <p>¿Podés contarnos cómo fue tu experiencia? Solo te lleva un minuto:</p>
-    <p><a href="{link}" style="background:#2563EB;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">
-    Calificar mi experiencia</a></p>
-    <p>Este link es personal y de un solo uso. ¡Gracias por confiar en nosotros!</p>
-    """
-    _enviar(email_destino, asunto, cuerpo)
-
-
-def notificar_respuesta_presupuesto(
-    email_destino: str, nombre: str, marca: str, modelo: str, respuesta: str
-) -> None:
-    asunto = f"Respuesta a tu solicitud de presupuesto — {marca} {modelo}"
-    cuerpo = f"""
-    <p>Hola {nombre},</p>
-    <p>El taller respondió a tu solicitud de presupuesto para tu <strong>{marca} {modelo}</strong>:</p>
-    <blockquote style="border-left:3px solid #2563EB;padding-left:16px;color:#374151;">{respuesta}</blockquote>
-    <p>Si tenés dudas, no dudes en contactarnos.</p>
-    """
-    _enviar(email_destino, asunto, cuerpo)
+def notificar_respuesta_presupuesto(solicitud) -> None:
+    ctx = _contexto(solicitud, "Tu presupuesto ya tiene una respuesta")
+    ctx["respuesta"] = solicitud.respuesta or ""
+    ctx["whatsapp_url"] = _whatsapp_url(
+        ctx["taller"].get("telefono"),
+        f"Hola, quiero consultar por el presupuesto de mi {solicitud.marca} {solicitud.modelo}.",
+    )
+    html = email_service.render("presupuesto_respuesta.html", **ctx)
+    email_service.send_email(
+        solicitud.email,
+        f"Respuesta a tu solicitud de presupuesto — {solicitud.marca} {solicitud.modelo}",
+        html,
+    )

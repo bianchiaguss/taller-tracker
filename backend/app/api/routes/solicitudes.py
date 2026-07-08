@@ -17,7 +17,7 @@ router = APIRouter(prefix="/api/presupuestos", tags=["presupuestos"])
 def crear_solicitud(data: SolicitudCreate, db: Session = Depends(get_db)):
     solicitud = SolicitudPresupuesto(**data.model_dump())
     db.add(solicitud); db.commit(); db.refresh(solicitud)
-    notificar_nueva_solicitud(data.email, data.nombre, data.marca, data.modelo)
+    notificar_nueva_solicitud(solicitud)
     return solicitud
 
 
@@ -64,14 +64,9 @@ def actualizar_solicitud(
         s.respuesta_at = datetime.now(timezone.utc)
         if s.estado == "nueva":
             s.estado = "en_contacto"
-        # Notificar al cliente
-        notificar_respuesta_presupuesto(
-            email_destino=s.email,
-            nombre=s.nombre,
-            marca=s.marca,
-            modelo=s.modelo,
-            respuesta=data.respuesta,
-        )
 
     db.commit(); db.refresh(s)
+    # Notificar al cliente con la solicitud ya persistida (incluye la respuesta).
+    if data.respuesta is not None:
+        notificar_respuesta_presupuesto(s)
     return s
