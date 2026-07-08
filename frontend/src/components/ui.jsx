@@ -33,7 +33,7 @@ export function Reveal({ children, className = '', as = 'div', ...props }) {
 }
 
 /* ── Toggle de tema (claro / oscuro) ──────────────── */
-export function ThemeToggle({ className = '' }) {
+export function ThemeToggle({ className = '', chrome = false }) {
   const [dark, setDark] = useState(() =>
     typeof document !== 'undefined' && document.documentElement.classList.contains('dark'))
   const toggle = () => {
@@ -45,7 +45,7 @@ export function ThemeToggle({ className = '' }) {
   return (
     <button type="button" onClick={toggle} title={dark ? 'Modo claro' : 'Modo oscuro'}
       aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
-      className={`inline-flex items-center justify-center rounded-lg transition-colors ${className}`}>
+      className={`theme-toggle ${chrome ? 'theme-toggle--chrome' : ''} ${className}`}>
       {dark ? <Sun size={18} /> : <Moon size={18} />}
     </button>
   )

@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
@@ -26,17 +26,18 @@ const nav = [
 function SidebarContent({ usuario, onLogout, onNavigate }) {
   return (
     <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="px-5 py-5">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-glow">
+      {/* Logo → Dashboard */}
+      <div className="px-3 py-4">
+        <Link to="/admin" onClick={onNavigate} title="Ir al Dashboard"
+          className="group flex items-center gap-2.5 px-2 py-2 rounded-xl transition-colors hover:bg-white/5">
+          <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-glow transition-transform group-hover:scale-105">
             <Wrench size={17} className="text-white" />
           </div>
           <div>
             <p className="text-white font-bold text-[15px] leading-none tracking-tight">TallerTrack</p>
             <p className="text-slate-500 text-[11px] mt-1">Panel de gestión</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Nav */}
@@ -75,7 +76,7 @@ function SidebarContent({ usuario, onLogout, onNavigate }) {
             <p className="text-white text-xs font-semibold truncate">{usuario?.nombre} {usuario?.apellido}</p>
             <p className="text-slate-500 text-[11px] truncate">Administrador</p>
           </div>
-          <ThemeToggle className="text-slate-400 hover:text-white p-1" />
+          <ThemeToggle chrome className="w-8 h-8" />
           <button onClick={onLogout} className="text-slate-500 hover:text-red-400 transition-colors p-1" title="Cerrar sesión">
             <LogOut size={16} />
           </button>
@@ -128,8 +129,8 @@ export default function AdminLayout() {
         {/* Topbar mobile */}
         <header className="lg:hidden flex items-center justify-between px-4 h-14 bg-white border-b border-slate-200 flex-shrink-0">
           <button onClick={() => setMobileOpen(true)} className="p-2 -ml-2 text-slate-600"><Menu size={22} /></button>
-          <span className="font-bold text-slate-900 text-sm">TallerTrack</span>
-          <ThemeToggle className="w-9 h-9 text-slate-600 hover:bg-slate-100" />
+          <Link to="/admin" className="font-bold text-slate-900 text-sm">TallerTrack</Link>
+          <ThemeToggle />
         </header>
 
         <main className="flex-1 overflow-y-auto">

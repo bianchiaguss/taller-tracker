@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import api from '../../api/client'
-import { Plus, X, Car, Pencil, Trash2, Users, AlertTriangle, Star, FolderOpen, Check } from 'lucide-react'
+import { Plus, X, Car, Pencil, Trash2, Users, AlertTriangle, Star, FolderOpen, Check, Search } from 'lucide-react'
 import { Page, PageHeader, Card, EmptyState, Loading, Modal, Reveal, Spinner, Field, TextInput, PhoneInput } from '../../components/ui'
 
 function ModalHeader({ title, subtitle, onClose }) {
@@ -256,6 +256,7 @@ export default function Clientes() {
   const [vehiculos, setVehiculos] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null)
+  const [busqueda, setBusqueda] = useState('')
 
   useEffect(() => {
     Promise.all([api.get('/clientes'), api.get('/vehiculos')]).then(([c, v]) => {
@@ -272,6 +273,14 @@ export default function Clientes() {
 
   const vPorCliente = id => vehiculos.filter(v => v.cliente_id === id)
 
+  const q = busqueda.trim().toLowerCase()
+  const clientesFiltrados = !q ? clientes : clientes.filter(c => {
+    const nombre = `${c.usuario.nombre} ${c.usuario.apellido}`.toLowerCase()
+    const email = (c.usuario.email || '').toLowerCase()
+    const patentes = vPorCliente(c.id).map(v => (v.patente || '').toLowerCase()).join(' ')
+    return nombre.includes(q) || email.includes(q) || patentes.includes(q)
+  })
+
   if (loading) return <Loading />
 
   return (
@@ -287,8 +296,18 @@ export default function Clientes() {
             action={<button onClick={() => setModal('nuevo')} className="btn-primary"><Plus size={16} /> Crear primer cliente</button>} />
         </Card>
       ) : (
-        <div className="space-y-3">
-          {clientes.map(c => (
+        <>
+          <div className="relative mb-4">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <input className="input pl-10" placeholder="Buscar por nombre, email o patente…"
+              value={busqueda} onChange={e => setBusqueda(e.target.value)} />
+          </div>
+          {clientesFiltrados.length === 0 ? (
+            <Card><EmptyState icon={Search} title="Sin resultados"
+              description={`No encontramos clientes que coincidan con "${busqueda}".`} /></Card>
+          ) : (
+          <div className="space-y-3">
+          {clientesFiltrados.map(c => (
             <Reveal key={c.id}>
               <div className="card card-pad card-hover group">
                 <div className="flex items-start justify-between gap-4">
@@ -324,7 +343,9 @@ export default function Clientes() {
               </div>
             </Reveal>
           ))}
-        </div>
+          </div>
+          )}
+        </>
       )}
 
       <AnimatePresence>

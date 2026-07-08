@@ -54,7 +54,7 @@ function Navbar({ config }) {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ThemeToggle className="w-9 h-9 text-white hover:bg-white/10" />
+          <ThemeToggle chrome />
           <Link to="/presupuesto" className="hidden md:inline-flex btn-primary btn-sm">
             Solicitar presupuesto
           </Link>

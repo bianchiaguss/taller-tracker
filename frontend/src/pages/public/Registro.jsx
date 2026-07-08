@@ -97,7 +97,7 @@ export default function Registro() {
 
   return (
     <div className="min-h-screen flex">
-      <ThemeToggle className="fixed top-4 right-4 z-50 w-10 h-10 bg-white/80 border border-slate-200 shadow-soft text-slate-600 hover:bg-white" />
+      <ThemeToggle className="fixed top-4 right-4 z-50 w-10 h-10" />
       <BrandPanel tallerNombre={tallerNombre} />
 
       {/* Panel derecho — formulario */}
