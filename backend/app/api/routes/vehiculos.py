@@ -13,6 +13,11 @@ from app.schemas.vehiculo import VehiculoCreate, VehiculoOut, VehiculoUpdate
 router = APIRouter(prefix="/api/vehiculos", tags=["vehiculos"])
 
 
+def _norm_patente(p: str) -> str:
+    """Sin espacios y en mayúsculas, para que la unicidad sea consistente."""
+    return "".join((p or "").split()).upper()
+
+
 def _verificar_acceso_cliente(actual: Usuario, cliente_id: uuid.UUID, db: Session):
     if actual.rol == RolUsuario.CLIENTE:
         cliente = db.query(Cliente).filter(Cliente.usuario_id == actual.id).first()
@@ -37,7 +42,11 @@ def crear_vehiculo(
 ):
     if not db.get(Cliente, data.cliente_id):
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
-    vehiculo = Vehiculo(**data.model_dump())
+    valores = data.model_dump()
+    valores["patente"] = _norm_patente(valores["patente"])
+    if db.query(Vehiculo).filter(Vehiculo.patente == valores["patente"]).first():
+        raise HTTPException(status_code=400, detail="Ya existe un vehículo con esa patente")
+    vehiculo = Vehiculo(**valores)
     # El primer vehiculo del cliente queda como principal automaticamente.
     ya_tiene = db.query(Vehiculo).filter(Vehiculo.cliente_id == data.cliente_id).count()
     if ya_tiene == 0:
@@ -69,7 +78,15 @@ def actualizar_vehiculo(
     vehiculo = db.get(Vehiculo, vehiculo_id)
     if not vehiculo:
         raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
-    for campo, valor in data.model_dump(exclude_unset=True).items():
+    cambios = data.model_dump(exclude_unset=True)
+    if cambios.get("patente") is not None:
+        cambios["patente"] = _norm_patente(cambios["patente"])
+        dup = db.query(Vehiculo).filter(
+            Vehiculo.patente == cambios["patente"], Vehiculo.id != vehiculo_id
+        ).first()
+        if dup:
+            raise HTTPException(status_code=400, detail="Ya existe un vehículo con esa patente")
+    for campo, valor in cambios.items():
         setattr(vehiculo, campo, valor)
     db.commit()
     db.refresh(vehiculo)

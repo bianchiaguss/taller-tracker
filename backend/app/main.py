@@ -71,6 +71,12 @@ def _migrar_columnas(engine):
                 " SELECT v1.id FROM vehiculos v1 WHERE v1.created_at = ("
                 "  SELECT MIN(v2.created_at) FROM vehiculos v2 WHERE v2.cliente_id = v1.cliente_id))"
             ))
+    # Unicidad de patente para DBs ya existentes. Si hay duplicados, se omite.
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ux_vehiculos_patente ON vehiculos(patente)"))
+    except Exception:
+        logging.getLogger("app").warning("No se pudo crear el indice unico de patente (¿duplicados existentes?)")
 
 
 @app.on_event("startup")

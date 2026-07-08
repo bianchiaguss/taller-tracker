@@ -18,7 +18,7 @@ class Vehiculo(Base, UUIDMixin, TimestampMixin):
     marca: Mapped[str] = mapped_column(String(100), nullable=False)
     modelo: Mapped[str] = mapped_column(String(100), nullable=False)
     anio: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    patente: Mapped[str] = mapped_column(String(20), index=True, nullable=False)
+    patente: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
     color: Mapped[str | None] = mapped_column(String(50), nullable=True)
     vin: Mapped[str | None] = mapped_column(String(50), nullable=True)
     kilometraje: Mapped[int | None] = mapped_column(Integer, nullable=True)
